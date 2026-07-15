@@ -1,0 +1,82 @@
+diff --git a/node_modules/@easyops-cn/docusaurus-search-local/dist/client/client/utils/tokenize.js b/node_modules/@easyops-cn/docusaurus-search-local/dist/client/client/utils/tokenize.js
+index e79541d..108f887 100644
+--- a/node_modules/@easyops-cn/docusaurus-search-local/dist/client/client/utils/tokenize.js
++++ b/node_modules/@easyops-cn/docusaurus-search-local/dist/client/client/utils/tokenize.js
+@@ -24,5 +24,25 @@ export function tokenize(text, language) {
+         // https://mothereff.in/regexpu#input=const+regex+%3D+/%5Cp%7BUnified_Ideograph%7D/u%3B&unicodePropertyEscape=1
+         // regExpMatchWords = /\w+|[\u3400-\u4DBF\u4E00-\u9FFC\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29\u{20000}-\u{2A6DD}\u{2A700}-\u{2B734}\u{2B740}-\u{2B81D}\u{2B820}-\u{2CEA1}\u{2CEB0}-\u{2EBE0}\u{30000}-\u{3134A}]+/gu
+     }
+-    return text.toLowerCase().match(regExpMatchWords) || [];
++    const raw = text.toLowerCase().match(regExpMatchWords) || [];
++    // THAI PATCH: segment Thai tokens with Intl.Segmenter so queries match the
++    // Thai-segmented build index. Non-Thai tokens are left untouched.
++    if (typeof Intl !== "undefined" && Intl.Segmenter) {
++        const seg = new Intl.Segmenter("th", { granularity: "word" });
++        const out = [];
++        for (const tok of raw) {
++            if (/[\u0E00-\u0E7F]/.test(tok)) {
++                for (const s of seg.segment(tok)) {
++                    if (s.segment.trim().length > 0) {
++                        out.push(s.segment);
++                    }
++                }
++            }
++            else {
++                out.push(tok);
++            }
++        }
++        return out;
++    }
++    return raw;
+ }
+diff --git a/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/utils/buildIndex.js b/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/utils/buildIndex.js
+index 821d58f..58a423c 100644
+--- a/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/utils/buildIndex.js
++++ b/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/utils/buildIndex.js
+@@ -70,6 +70,46 @@ function buildIndex(allDocuments, { language, removeDefaultStopWordFilter, remov
+             if (language.includes("zh")) {
+                 this.tokenizer = lunr_1.default.zh.tokenizer;
+             }
++            else {
++                // THAI PATCH: segment Thai (no inter-word spaces) using Intl.Segmenter
++                // so Thai words become individually searchable. Latin/digits keep default behavior.
++                // lunr's default trimmer uses \W which strips Thai chars (treated as non-word),
++                // emptying Thai tokens — remove it so Thai tokens survive in the index.
++                this.pipeline.remove(lunr_1.default.trimmer);
++                var __thaiSeg = new Intl.Segmenter("th", { granularity: "word" });
++                this.tokenizer = function (input, metadata) {
++                    if (input == null) {
++                        return [];
++                    }
++                    if (Array.isArray(input)) {
++                        return input.map(function (t) {
++                            return new lunr_1.default.Token(lunr_1.default.utils.asString(t).toLowerCase(), lunr_1.default.utils.clone(metadata));
++                        });
++                    }
++                    var content = input.toString().toLowerCase();
++                    var tokens = [];
++                    var re = /[a-z0-9_]+|[\u0E00-\u0E7F]+/g;
++                    var m;
++                    while ((m = re.exec(content)) !== null) {
++                        var word = m[0];
++                        var startPos = m.index;
++                        if (/[\u0E00-\u0E7F]/.test(word[0])) {
++                            var offset = startPos;
++                            for (var s of __thaiSeg.segment(word)) {
++                                var w = s.segment;
++                                if (w.trim().length > 0) {
++                                    tokens.push(new lunr_1.default.Token(w, Object.assign(Object.assign({}, lunr_1.default.utils.clone(metadata)), { position: [offset, w.length], index: tokens.length })));
++                                }
++                                offset += w.length;
++                            }
++                        }
++                        else {
++                            tokens.push(new lunr_1.default.Token(word, Object.assign(Object.assign({}, lunr_1.default.utils.clone(metadata)), { position: [startPos, word.length], index: tokens.length })));
++                        }
++                    }
++                    return tokens;
++                };
++            }
+             this.ref("i");
+             this.field("t");
+             this.metadataWhitelist = ["position"];
