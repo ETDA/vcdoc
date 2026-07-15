@@ -37,7 +37,23 @@ const config: Config = {
     },
   },
 
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    // Offline local search (no Algolia account needed) — works on GitHub Pages
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        // docs are served at the site root (routeBasePath: '/')
+        docsRouteBasePath: '/',
+        indexBlog: false,
+        highlightSearchTermsOnTargetPage: true,
+        // NOTE: 'th' triggers a lunr tokenizer bug (token.update is not a function),
+        // so we index with 'en'. Thai text is still searchable (whitespace-tokenized).
+        language: ['en'],
+      },
+    ],
+  ],
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -96,6 +112,11 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'เอกสาร',
+        },
+        {
+          href: 'https://github.com/ETDA/vcdoc/issues',
+          label: 'Issues',
+          position: 'right',
         },
         {
           href: 'https://github.com/ETDA/vcdoc',
