@@ -1,0 +1,84 @@
+# Deploy Docusaurus site to GitHub Pages
+#
+# Uses the native GitHub Pages deployment flow (configure-pages / upload-pages-artifact /
+# deploy-pages) instead of the legacy peaceiris/actions-gh-pages + gh-pages-branch approach.
+# This avoids pushing built assets into git history and lets GitHub manage the Pages
+# environment/deployment directly.
+name: Deploy Docusaurus to GitHub Pages
+
+on:
+  # Auto-deploy whenever main is updated
+  push:
+    branches:
+      - main
+  # Allow triggering a deploy manually from the Actions tab without needing a new commit
+  workflow_dispatch:
+
+# Minimal permissions needed:
+# - contents: read   -> checkout the repo
+# - pages: write      -> publish to the GitHub Pages environment
+# - id-token: write   -> required for OIDC token used by actions/deploy-pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment should run at a time. New pushes should NOT cancel an in-flight
+# deployment (cancel-in-progress: false) so a deploy that's already publishing finishes
+# cleanly instead of being interrupted mid-way.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Node 20 matches the "engines.node": ">=20.0" requirement in package.json.
+      # cache: npm speeds up subsequent runs by caching ~/.npm keyed on package-lock.json.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      # npm ci is used (not npm install) for reproducible installs from package-lock.json,
+      # which is safer for CI.
+      - name: Install dependencies
+        run: npm ci
+
+      # Configures the GITHUB_PAGES / baseUrl-related env vars for the Pages environment.
+      # Not strictly required for Docusaurus (baseUrl is already hardcoded to /vcdoc/ in
+      # docusaurus.config.ts), but running it before build follows the officially
+      # recommended pattern and ensures the Pages environment is validated early.
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site
+        run: npm run build
+
+      # Uploads the static site (Docusaurus outputs to build/) as a Pages artifact.
+      # This artifact is consumed by actions/deploy-pages in the deploy job below.
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    # Deploy only after the build/upload succeeds
+    needs: build
+    runs-on: ubuntu-latest
+
+    # Required so the deployment shows up under the repo's "github-pages" environment
+    # and the deployed URL is exposed/linked in the GitHub UI.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
