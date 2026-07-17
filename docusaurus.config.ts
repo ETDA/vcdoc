@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'VC Doc',
+  title: 'VC Document',
   tagline: 'เอกสารและมาตรฐาน Verifiable Credential โดย ETDA',
   favicon: 'img/favicon.ico',
 
@@ -101,9 +101,9 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'VC Doc',
+      title: 'VC Document',
       logo: {
-        alt: 'VC Doc Logo',
+        alt: 'VC Document Logo',
         src: 'img/favicon.ico',
       },
       items: [
