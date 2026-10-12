@@ -1,0 +1,89 @@
+# Validate the Docusaurus site on every push and pull request.
+#
+# This is the CI half of the pipeline (separate from deploy.yml, which is CD).
+# It typechecks, builds, statically validates the build output, and then runs
+# browser-based E2E tests that verify locale rendering and client-side mermaid
+# hydration — both of which only happen in a real browser.
+#
+# Best practices applied:
+#   - npm ci (not npm install) for reproducible installs from package-lock.json
+#   - Node version pinned to match "engines.node" (>=20) in package.json
+#   - npm cache via actions/setup-node, plus a Playwright browser cache
+#   - concurrency group so a new push cancels the stale in-flight run
+#   - build/ and Playwright artifacts uploaded for inspection on failure
+name: Validate Docusaurus
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+
+# Read-only checkout is all this workflow needs.
+permissions:
+  contents: read
+
+# Cancel the previous run on the same ref when a newer push arrives.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build site
+        run: npm run build
+
+      # Static checks on build/: every doc generated, locale layout, no raw
+      # HTML comments, mermaid blocks present in source.
+      - name: Validate build output
+        run: npm run validate:build
+
+      # Cache the Playwright browser binaries (keyed on the lockfile so a dep
+      # bump invalidates it). Saves ~150MB download on subsequent runs.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      # --with-deps installs the OS libraries Chromium needs on Ubuntu.
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # Serves build/ and verifies locale rendering + mermaid hydration.
+      - name: Browser E2E tests
+        run: npm run test:e2e
+
+      - name: Upload site build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-build
+          path: build
+          retention-days: 7
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

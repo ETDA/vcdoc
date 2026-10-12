@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'VC Document',
-  tagline: 'เอกสารและมาตรฐาน Verifiable Credential โดย ETDA',
+  tagline: 'Thai VC ARF — 2.0 DRAFT 0',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -26,8 +26,7 @@ const config: Config = {
   projectName: 'vcdoc', // Usually your repo name.
   deploymentBranch: 'gh-pages',
 
-  // TEMP: set to 'warn' while 3-02 & 4-02 full-flow are excluded from build
-  // (other chapters still link into them). Revert to 'throw' when re-enabled.
+  // ARF source files contain references to material outside this site.
   onBrokenLinks: 'warn',
 
   markdown: {
@@ -71,20 +70,18 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Serve docs at the site root so the homepage IS the content
           routeBasePath: '/',
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: '2.0 DRAFT 0',
+              path: '/',
+              banner: 'none',
+            },
+          },
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/ETDA/vcdoc/tree/main/',
-          // Temporarily excluded from build (3-02 & 4-02 full-flow).
-          // Keep Docusaurus default excludes, then add the two folders.
-          exclude: [
-            '**/_*.{js,jsx,ts,tsx,md,mdx}',
-            '**/_*/**',
-            '**/*.test.{js,jsx,ts,tsx}',
-            '**/__tests__/**',
-            '**/03-issuance-flow/02-full-flow/**',
-            '**/04-presentation-flow/02-full-flow/**',
-          ],
         },
         blog: false,
         theme: {
@@ -111,7 +108,21 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'เอกสาร',
+          label: 'Thai VC ARF',
+        },
+        {
+          to: '/en/thai-vc-arf/minimal-interoperability-reference',
+          label: 'VC stack (EN)',
+          position: 'left',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
+        {
+          href: 'https://github.com/ETDA/vcdoc/commits/main/',
+          label: 'History',
+          position: 'right',
         },
         {
           href: 'https://github.com/ETDA/vcdoc/issues',
@@ -132,7 +143,7 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'เอกสาร',
+              label: 'Thai VC ARF',
               to: '/',
             },
           ],

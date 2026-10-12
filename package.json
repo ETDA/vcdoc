@@ -13,7 +13,10 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "validate:build": "node scripts/validate-build.mjs",
+    "test": "npm run typecheck && npm run build && npm run validate:build",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.1",
@@ -31,7 +34,10 @@
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/tsconfig": "3.10.1",
     "@docusaurus/types": "3.10.1",
+    "@playwright/test": "^1.63.0",
     "@types/react": "^19.0.0",
+    "jsdom": "^29.1.1",
+    "mermaid": "^11.17.2",
     "patch-package": "^8.0.1",
     "typescript": "~6.0.2"
   },
