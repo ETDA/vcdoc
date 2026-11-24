@@ -31,7 +31,7 @@ export const deltaStats = (data: {
 ];
 
 /** Cell label used by the stacked (narrow container) table layout. */
-export const cellLabel = (label: string): CSSProperties => ({['--label' as string]: label}) as CSSProperties;
+export const cellLabel = (label: string): CSSProperties => ({['--label' as string]: JSON.stringify(label)}) as CSSProperties;
 
 const chipClass: Record<string, string> = {
   กำลังจัดทำ: styles.chipWip,
