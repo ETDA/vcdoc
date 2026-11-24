@@ -98,7 +98,7 @@ The verifier then checks three things:
 
 The verifier must also check the issuer's status, scope, and the credential's own status before accepting it.
 
-Identifiers: organisations use `did:web`, holders use `did:jwk`, and Thai identity rails such as NDID resolve as custom methods through the ETDA Trust Gateway (the universal resolver).
+Identifiers: organisations use `did:web`, holders use `did:jwk`, public DID methods resolve through the ETDA resolver at `https://resolver.etda.or.th` once it opens for the initial period, or through a resolver the party runs itself, and proprietary methods such as `did:ndid` are resolved by contacting the method provider.
 
 ```mermaid
 sequenceDiagram
@@ -136,7 +136,7 @@ sequenceDiagram
 
 ## The Trusted List
 
-ETDA audits organisations that act as issuers, verifiers, or wallet providers. The target profile publishes three related Trusted Lists as signed compact JWTs with LoTE-inspired payloads: `iss.txt`, `ver.txt`, and `wp.txt` on the [ETDA CDN profile](../../th/thai-vc-arf/12.1-trust-list-publication-profile.md). Each `.txt` file contains a compact JWT. Consumers fetch the relevant whole file on demand, without an API key, and validate ETDA's signature before using it.
+ETDA audits organisations that act as issuers, verifiers, or wallet providers. The target profile publishes three related Trusted Lists as signed compact JWTs with LoTE-inspired payloads: `iss.jwt`, `ver.jwt`, and `wp.jwt` on the [ETDA CDN profile](../../th/thai-vc-arf/12.1-trust-list-publication-profile.md). Each `.jwt` file contains a compact JWT. Consumers fetch the relevant whole file on demand, without an API key, and validate ETDA's signature before using it.
 
 The [decoded JWT examples](../../th/research/42-trusted-list-lote-jwt-format.md) use `LoTE.TrustedEntitiesList[]` for organisations and `TrustedEntityServices[]` for services. The issuer example is a three-part compact JWS with one organisation and three issuance services. It shows public keys, a certificate, and identifiers. Organisation and service status and authorised credential types remain to be defined in the Thai profile, along with their validation rules, before a consumer can make an authorisation decision.
 
@@ -154,7 +154,7 @@ The JWTs below illustrate the LoTE structure. Their signatures remain unverified
 
 ## Revocation and status
 
-Each issuer publishes its own Token Status List (`draft-ietf-oauth-status-list-18`). Status bits: 0 valid, 1 revoked, 2 suspended, 3 rotated (key rotation).
+Each issuer publishes its own Token Status List (`draft-ietf-oauth-status-list-18`). The Thai profile uses `0x00 VALID`, `0x01 INVALID`, and `0x02 SUSPENDED`. Verifiers reject application-specific values the profile does not support.
 
 Issuers target publication of a change within 15 minutes; the full process may take longer. Verifiers must validate the status URL against the source defined by the Thai profile, check the credential-supplied URL against that source, and read the status bit on every presentation (TC-4). The current JWT examples do not show a status-URL field. [Source analysis](../../th/research/42-trusted-list-lote-jwt-format.md).
 

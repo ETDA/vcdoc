@@ -25,7 +25,7 @@ description: "4. แนวคิดและองค์ประกอบที
 
 - มาตรฐานเกี่ยวกับตัวระบุ (identifier) ตัวระบุแบบกระจายศูนย์ (decentralized identifier: DID) และ DID Method เนื่องจากเป็นส่วนสำคัญเกี่ยวกับการระบุตัวบุคคลที่เกี่ยวข้องและการตรวจสอบ VC และ VP ดังนั้น identifier รวมไปถึงในส่วนของ DID Document ควรมีฟังก์ชันและการบริหารจัดการต่าง ๆ ที่มีความมั่นคงปลอดภัย ไม่ถูกแก้ไขโดยไม่ได้รับอนุญาต และสามารถดึงข้อมูล (resolve) มาใช้เมื่อต้องการตรวจสอบ VC หรือ VP ได้
 
-- Universal Resolver เนื่องจากในการตรวจสอบ VC และ VP นั้นต้องมีการดึงข้อมูล DID Document ที่ถูกจัดเก็บไว้ใน registry ของแต่ละ DID Method โดยการดึงข้อมูลดังกล่าว ส่วนใหญ่จะเป็นการดำเนินการผ่านช่องทาง resolver ของแต่ละ DID Method ดังนั้น ในกรณีที่มีการใช้งานหลาย DID Method ร่วมกัน ย่อมต้องมีการใช้ resolver หลายอัน หากมี Universal resolver ที่เป็นเสมือนศูนย์รวมของ resolver ก็จะช่วยให้สามารถเข้าใช้งานและดึงข้อมูล DID Document ได้ที่จุดเดียว
+- resolver และ Universal Resolver เนื่องจากการตรวจสอบ VC และ VP ต้องดึง DID Document ที่เก็บไว้ใน registry ของ DID Method แต่ละราย ซึ่งทำผ่าน resolver ของ method นั้น เมื่อใช้งานหลาย DID Method ร่วมกันจึงต้องใช้ resolver หลายตัว Universal Resolver เป็นซอฟต์แวร์ที่รวบรวม resolver หลายตัวไว้ที่จุดเดียว และ สพธอ. จะเปิด resolver สำหรับ public DID method ในระยะเริ่มต้น
 
 {/* pdf page 14 */}
 

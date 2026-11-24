@@ -20,7 +20,7 @@ description: "10. Wallet Unit Attestation (WUA) — Thai VC ARF 2.0 DRAFT 1"
 
 Wallet Unit Attestation (WUA) เป็นแนวคิดที่กำหนดขึ้นโดยกรอบ EU Digital Identity Wallet Architecture and Reference Framework (EUDI ARF) และมีฐานทางกฎหมายใน eIDAS 2.0 (Regulation (EU) 2024/1183) และ Commission Implementing Regulation series (CIR 2024/2977, 2024/2979, 2024/2982) รายงานฉบับนี้ **นำ WUA มาใช้ตามมาตรฐานของ EUDI** เพื่อรับรองผู้ให้บริการกระเป๋าเอกสารดิจิทัล (wallet provider) และหน่วยกระเป๋าเอกสารดิจิทัล (wallet unit) มิได้คิดค้นหรือกำหนดกลไกใหม่ขึ้นเอง
 
-บทนี้มุ่งอธิบายเฉพาะ **วิธีที่ระบบของไทยใช้ WUA ในกระแสงาน OID4VCI และ OID4VP** และความสัมพันธ์ระหว่าง WUA กับ Trusted List ของสำนักงานพัฒนาธุรกรรมทางอิเล็กทรอนิกส์ (สพธอ.) ส่วนรายละเอียดเชิงมาตรฐาน ได้แก่ โครงสร้างข้อมูล ข้อกำหนดระดับสูง (High-Level Requirements) และฐานทางกฎหมายฉบับเต็ม รายงานฉบับนี้ไม่กล่าวซ้ำ แต่ให้ผู้อ่านศึกษาจากต้นฉบับของ EUDI ตามที่ระบุใน [ภาคผนวก ก](#ภาคผนวก-ก--เอกสารอ้างอิงและการอ่านเพิ่มเติม)
+บทนี้มุ่งอธิบายเฉพาะ **วิธีที่ระบบของไทยใช้ WUA ใน flow OID4VCI และ OID4VP** และความสัมพันธ์ระหว่าง WUA กับ Trusted List ของสำนักงานพัฒนาธุรกรรมทางอิเล็กทรอนิกส์ (สพธอ.) ส่วนรายละเอียดเชิงมาตรฐาน ได้แก่ โครงสร้างข้อมูล ข้อกำหนดระดับสูง (High-Level Requirements) และฐานทางกฎหมายฉบับเต็ม รายงานฉบับนี้ไม่กล่าวซ้ำ แต่ให้ผู้อ่านศึกษาจากต้นฉบับของ EUDI ตามที่ระบุใน [ภาคผนวก ก](#ภาคผนวก-ก--เอกสารอ้างอิงและการอ่านเพิ่มเติม)
 
 ---
 
@@ -39,7 +39,7 @@ WUA เป็นกลไกที่ EUDI ARF กำหนดให้ wallet p
 
 รายงานฉบับนี้กำหนดให้ระบบของไทยใช้ WUA **ตามที่ EUDI กำหนดไว้** โดยไม่ดัดแปลงนิยามหรือโครงสร้าง บทนี้ครอบคลุมเฉพาะ
 
-- วิธีที่ wallet unit นำเสนอ WUA และวิธีที่ผู้พึ่งพาตรวจสอบ WUA ในกระแสงาน OID4VCI (การออกเอกสาร) และ OID4VP (การแสดงเอกสาร)
+- วิธีที่ wallet unit นำเสนอ WUA และวิธีที่ผู้พึ่งพาตรวจสอบ WUA ใน flow OID4VCI (การออกเอกสาร) และ OID4VP (การแสดงเอกสาร)
 - ความสัมพันธ์ระหว่าง WUA กับ Trusted List ของ สพธอ.
 - การเพิกถอนและการเผยแพร่สถานะของ WUA ในบริบทของระบบไทย
 
@@ -93,17 +93,19 @@ WUA เป็นคำรวม (umbrella term) ของหลักฐาน�
 | WIA | Wallet Instance Attestation | ความเป็นของแท้และความสมบูรณ์ของ wallet instance | Client authentication ใน Wallet Attestation (Appendix E); mapping ตาม Thai profile |
 | KA | Key Attestation | การจัดเก็บกุญแจใน WSCD และระดับความมั่นคงปลอดภัยของกุญแจ | Key Attestation ใน JOSE header ของ `proofs.jwt` (Appendix D/F.1); mapping ตาม Thai profile |
 
+**App attestation ไม่ใช่ KA** App attestation เช่น Play Integrity หรือ App Attest รับรองความสมบูรณ์ของแอปและใช้เป็นหลักฐานตอน audit หรือ enrollment ตาม SC-01 ในบทที่ 14 แต่ไม่ได้บอกระดับการเก็บกุญแจ หลักฐานระดับการเก็บกุญแจมาจาก KA ซึ่งเป็นส่วนหนึ่งของ WUA ที่ทั้ง flow OID4VCI และ OID4VP บังคับใช้อยู่แล้ว ระบบจึงไม่ใช้ผล app attestation แทน KA
+
 รายละเอียดการเพิกถอนและสถานะของ WIA และ KA อยู่ใน [§10.5](#105-อายุการใช้งาน-การเพิกถอน-และสถานะของ-wua) ส่วนรายละเอียดโครงสร้างข้อมูลฉบับเต็ม ให้อ้างอิง EUDI ARF 2.9.0 TS3
 
 ---
 
-## 10.3 การใช้ WUA ในกระแสงานของระบบไทย
+## 10.3 การใช้ WUA ใน flow ของระบบไทย
 
-หัวข้อนี้เป็นสาระสำคัญของบท โดยอธิบายว่า WUA ปรากฏอยู่ที่จุดใดในกระแสงานมาตรฐาน กระแสงานฉบับเต็มพร้อมแผนภาพลำดับ (sequence diagram) และจุดตรวจ (checkpoint) ทั้งหมดอยู่ใน [บทที่ 8 — Implementation Guidelines](08-implementation-guidelines.md)
+หัวข้อนี้เป็นสาระสำคัญของบท โดยอธิบายว่า WUA ปรากฏอยู่ที่จุดใดใน flow มาตรฐาน ส่วน flow ฉบับเต็มพร้อมแผนภาพลำดับ (sequence diagram) และจุดตรวจ (checkpoint) ทั้งหมดอยู่ใน [บทที่ 8 — Implementation Guidelines](08-implementation-guidelines.md)
 
 ### 10.3.1 การออกเอกสาร (OID4VCI)
 
-ในกระแสงานการออกเอกสารตาม OID4VCI ตาม [บทที่ 8 §8.2](08-implementation-guidelines.md), `proofs.jwt` ใน Credential Request พิสูจน์การครอบครองกุญแจที่จะผูกกับ Credential. หาก Thai profile ใช้ Wallet Attestation ตาม Appendix E, Wallet ส่ง Client Attestation ใน Pushed Authorization Request หรือ Token Request เพื่อยืนยัน Client ต่อ Authorization Server ก่อนออก Access Token; การส่งนี้แยกจาก Credential Request.
+ใน flow การออกเอกสารตาม OID4VCI ตาม [บทที่ 8 §8.2](08-implementation-guidelines.md), `proofs.jwt` ใน Credential Request พิสูจน์การครอบครองกุญแจที่จะผูกกับ Credential. หาก Thai profile ใช้ Wallet Attestation ตาม Appendix E, Wallet ส่ง Client Attestation ใน Pushed Authorization Request หรือ Token Request เพื่อยืนยัน Client ต่อ Authorization Server ก่อนออก Access Token; การส่งนี้แยกจาก Credential Request.
 
 Thai profile อาจกำหนดให้ใช้ WIA/KA และให้ Issuer ตรวจข้อมูล trust, key และสถานะ Wallet ก่อนออก Credential; ต้องระบุ mapping และจุดส่งให้ชัด. Wallet Attestation ตาม Appendix E ใช้ยืนยัน Client ต่อ Authorization Server. `proofs.jwt` ตาม Appendix F.1 พิสูจน์การครอบครองกุญแจใน Credential Request และอาจมี Key Attestation ตาม Appendix D ใน JOSE header. อย่าอนุมานว่า EUDI WUA ทั้งชุดส่งใน Credential Request หรือเป็นรูปแบบเดียวกับ OID4VCI โดยอัตโนมัติ. OID4VCI ไม่กำหนด Trusted List/Registry ของไทย จึงต้องกำหนด trust source, schema, freshness และวิธีตรวจสถานะใน profile.
 
@@ -115,13 +117,13 @@ sequenceDiagram
     participant TL as Trusted List (สพธอ.)
     participant WPR as Wallet Provider<br/>Token Status List
 
-    WU->>ISS: Pushed Authorization Request หรือ Token Request + Client Attestation/PoP ตาม profile
+    WU->>ISS: Pushed Authorization Request หรือ Token Request + Client Attestation/PoP
     ISS->>TL: ตรวจ trust source และ Wallet Provider ตาม Thai profile
     ISS->>ISS: ตรวจ Client Attestation/PoP ก่อนออก Access Token
     ISS-->>WU: Access Token
     WU->>ISS: Credential Request + Access Token + proofs.jwt
     ISS->>ISS: ตรวจ holder-key proof และ Key Attestation หาก Thai profile กำหนด
-    ISS->>WPR: ตรวจสถานะ Wallet/Key เมื่อ Thai profile กำหนด
+    ISS->>WPR: ตรวจว่ากระเป๋าและกุญแจยังไม่ถูกเพิกถอน
     WPR-->>ISS: ผลตรวจสถานะตามกลไก profile
     alt ผ่านทั้งหมด
         ISS-->>WU: ออกเอกสารผูกกับกุญแจใน Key Attestation
@@ -130,16 +132,16 @@ sequenceDiagram
     end
 ```
 
-การตรวจสถานะของ WUA ใช้จุดตรวจสอบของ wallet provider โดยคงความเป็นส่วนตัว (privacy-preserving) ของผู้ใช้รายเครื่อง สอดคล้องกับ CIR 2024/2979 Art. 7 จุดตรวจนี้ตรงกับจุดตรวจ TC-2 ใน [บทที่ 8 §8.2.5](08-implementation-guidelines.md)
+การตรวจสถานะของ WUA ใช้จุดตรวจสอบของ wallet provider โดยคงความเป็นส่วนตัว (privacy-preserving) ของผู้ใช้รายเครื่อง สอดคล้องกับ CIR 2024/2979 Art. 7 จุดตรวจนี้ตรงกับจุดตรวจ TC-2 ใน [บทที่ 8 §8.4.2](08-implementation-guidelines.md)
 
 ### 10.3.2 การแสดงเอกสาร (OID4VP)
 
-ในกระแสงานการแสดงเอกสารตาม OID4VP ตาม [บทที่ 8 §8.3](08-implementation-guidelines.md) Thai profile กำหนดให้ Wallet รัฐบาลส่ง WIA และ WIA-PoP เพื่อให้ผู้ตรวจสอบเอกสารตรวจ TC-2; Wallet เอกชนเลือกส่งทั้งคู่หรือไม่ส่งทั้งคู่ได้
+ใน flow การแสดงเอกสารตาม OID4VP ตาม [บทที่ 8 §8.3](08-implementation-guidelines.md) Thai profile กำหนดให้ทุก Wallet ส่ง WIA และ WIA-PoP เพื่อให้ผู้ตรวจสอบเอกสารตรวจ TC-2 ไม่มีข้อยกเว้นตามประเภทผู้ให้บริการ
 
 - เมื่อ Wallet ส่ง WIA ผู้ตรวจสอบเอกสารใช้ WIA เพื่อยืนยันแหล่งที่มาของ Wallet Provider และใช้ WIA-PoP เพื่อยืนยันการครอบครองกุญแจในธุรกรรมปัจจุบัน ตามกติกา TC-2 ใน [บทที่ 8 §8.4.2](08-implementation-guidelines.md)
-- หาก Wallet เอกชนไม่ส่งทั้งสองรายการ ผู้ตรวจสอบเอกสารข้าม TC-2 และตรวจ TC-3/TC-4 ต่อ; หากส่งมาเพียงรายการเดียวหรือหลักฐานรายการใดตรวจไม่ผ่าน ให้ปฏิเสธ VP
+- หาก Wallet ไม่ส่งรายการใดรายการหนึ่ง หรือหลักฐานรายการใดตรวจไม่ผ่าน ให้ปฏิเสธ VP ไม่มีเส้นทางข้าม TC-2
 - ผู้ตรวจสอบเอกสาร **ต้องไม่** ได้รับข้อมูลความสามารถของอุปกรณ์ (Use Case 2) ตามข้อกำหนดความเป็นส่วนตัวของ EUDI ARF (HLR WUA_24)
-- การจัดประเภท Wallet และผลของการไม่มี WIA/WIA-PoP เป็นข้อกำหนดของ Thai profile ไม่ใช่ข้อกำหนดของ OID4VP หรือ EUDI WUA โดยตรง
+- การบังคับ WIA กับทุก Wallet เป็นข้อกำหนดของ Thai profile ที่เข้มกว่า OID4VP ไม่ใช่ข้อกำหนดของ OID4VP หรือ EUDI WUA โดยตรง
 
 ### 10.3.3 ข้อมูลที่แต่ละบทบาทเข้าถึงได้
 
@@ -167,6 +169,8 @@ flowchart TD
 ### 10.4.2 การลงทะเบียน Wallet Provider
 
 การลงทะเบียนเป็นไปตาม [`../policy/01-verifier-registration-policy.md`](../policy/01-verifier-registration-policy.md) โดย สพธอ. ตรวจประเมิน 3 ด้าน ได้แก่ (ก) ความปลอดภัยของซอฟต์แวร์ (ข) การจัดการกุญแจ และ (ค) การคุ้มครองข้อมูลส่วนบุคคล เมื่อผ่านการประเมิน สพธอ. เพิ่ม wallet provider ใน Wallet Provider Trusted List ซึ่งเผยแพร่เป็น JWT ที่มี payload แบบ LoTE [รูปแบบอ้างอิง](../research/42-trusted-list-lote-jwt-format.md) ตัวอย่าง JWT ของรายการนี้ยังมี `LoTE.TrustedEntitiesList` เป็นอาร์เรย์ว่าง จึงยังไม่ยืนยันเส้นทางข้อมูลสำหรับ WUA ได้ Thai profile ต้องกำหนดวิธีประกาศและตรวจสอบข้อมูลต่อไปนี้ก่อนใช้งานจริง:
+
+**[ข้อกำหนด]** สพธอ. **MUST** ประกาศ Web Portal ให้ผู้ออกเอกสาร ผู้ตรวจสอบเอกสาร และผู้ให้บริการกระเป๋า ยื่นลงทะเบียนที่จุดเดียว โดยมีเป้าหมายเปิดใช้ราวไตรมาส 1 ปี 2570 และ **MUST** ประกาศรายการเอกสารที่ต้องยื่นต่อบทบาทก่อนเปิดรับ
 
 1. DID ของ wallet provider
 2. ใบรับรองสำหรับตรวจลายมือชื่อ WUA
@@ -221,9 +225,9 @@ WIA, KA และเอกสารรับรอง (VC/PID/attestation) ต�
 
 | รายการสถานะ | ผู้เผยแพร่ | ติดตามสถานะของ | ผู้ตรวจสถานะ |
 |------|----------------|---------|--------------|
-| สถานะ WIA (`client_status`) | wallet provider ที่ออก WIA | wallet instance คือตัวโปรแกรมกระเป๋า | ผู้ออกเอกสาร (กระแสงาน OID4VCI) |
-| สถานะ KA (`key_storage_status`) | wallet provider ที่ออก KA | WSCD หรือ keystore ที่เก็บกุญแจ | ผู้ออกเอกสาร (กระแสงาน OID4VCI) |
-| สถานะเอกสารรับรอง (VC/PID/attestation) | ผู้ออกเอกสารแต่ละราย | เอกสารรับรองที่ออกให้ผู้ถือ | ผู้ตรวจสอบเอกสาร (กระแสงาน OID4VP) |
+| สถานะ WIA (`client_status`) | wallet provider ที่ออก WIA | wallet instance คือตัวโปรแกรมกระเป๋า | ผู้ออกเอกสาร (flow OID4VCI) |
+| สถานะ KA (`key_storage_status`) | wallet provider ที่ออก KA | WSCD หรือ keystore ที่เก็บกุญแจ | ผู้ออกเอกสาร (flow OID4VCI) |
+| สถานะเอกสารรับรอง (VC/PID/attestation) | ผู้ออกเอกสารแต่ละราย | เอกสารรับรองที่ออกให้ผู้ถือ | ผู้ตรวจสอบเอกสาร (flow OID4VP) |
 
 ความสัมพันธ์แบบต่อเนื่อง (cascade) มีดังนี้ เมื่อ wallet provider เพิกถอน WIA หรือ KA ผ่านรายการสถานะของตน ผู้ออกเอกสารที่เคยออกเอกสารให้ wallet unit นั้นต้องเพิกถอนเอกสารที่ผูกไว้ผ่าน IETF Token Status List **ของผู้ออกเอกสารเอง** ตาม CIR 2024/2977 Art. 5(4)(b) กล่าวคือ รายการสถานะของ WUA ใช้กับ wallet instance และกุญแจ ส่วนรายการสถานะของผู้ออกเอกสารใช้กับเอกสารที่ผูกกับ wallet unit นั้น ด้วยเหตุนี้ ผู้ออกเอกสารจึงต้องติดตามสถานะของ WIA และ KA ที่ตนเคยตรวจไว้เป็นระยะ เช่น รายวัน เพื่อเพิกถอนเอกสารที่ผูกกับ wallet unit ที่ถูกเพิกถอนแล้ว
 
@@ -276,7 +280,7 @@ flowchart LR
 ### ก.3 เอกสารภายในที่เกี่ยวข้อง
 
 10. [บทที่ 2 — บทนิยาม §2.24](02-definitions.md) — นิยาม WUA
-11. [บทที่ 8 — Implementation Guidelines](08-implementation-guidelines.md) — กระแสงาน OID4VCI/OID4VP ฉบับเต็ม
+11. [บทที่ 8 — Implementation Guidelines](08-implementation-guidelines.md) — flow OID4VCI/OID4VP ฉบับเต็ม
 12. [บทที่ 9 — Trust Model 3](09-trust-model-3.md) — แบบจำลองความน่าเชื่อถือ
 13. [บทที่ 12 — Key Management และ Trusted List Deployment](12-key-management-and-trustlist-deployment.md) — การจัดการกุญแจและ WSCD
 14. [บทที่ 13 — VC Status และการเพิกถอน](13-vc-status-and-revocation.md) — กลไกสถานะ
@@ -286,12 +290,13 @@ flowchart LR
 
 | เวอร์ชัน | วันที่ | การเปลี่ยนแปลง |
 |---------|-------|----------------|
-| 1.8 | 1 ตุลาคม 2569 | ปรับข้อกำหนด WIA/WIA-PoP ใน OID4VP: Wallet รัฐบาลต้องส่งหลักฐานครบคู่ ส่วน Wallet เอกชนเลือกส่งครบคู่หรือไม่ส่งทั้งคู่ได้; หากส่งไม่ครบหรือตรวจไม่ผ่านให้ปฏิเสธ VP; หากข้อมูลจำแนกประเภท Wallet จากแหล่งที่เชื่อถือได้ขาดหาย ไม่สดใหม่ หรือตรวจสอบไม่ได้ ให้ปฏิเสธ VP และห้ามถือว่าข้อมูลที่ขาดหายหมายถึง Wallet เอกชน โดยไม่เปลี่ยนข้อกำหนด OID4VCI |
+| 1.9 | 20 พฤศจิกายน 2569 | เลิกแยก Wallet รัฐบาลกับ Wallet เอกชน: TC-2 บังคับทุก Wallet ทั้ง OID4VCI และ OID4VP, WIA และ WIA-PoP ต้องส่งครบคู่ทุกครั้ง, ไม่มีเส้นทางข้าม TC-2 และไม่มีขั้นตอนจำแนกประเภท Wallet |
+| 1.8 | 1 ตุลาคม 2569 | ปรับข้อกำหนด WIA/WIA-PoP ใน OID4VP
 | 1.7 | 7 สิงหาคม 2569 | แก้ถ้อยคำ "คำร่ม" เป็น **"คำรวม"** ทุกจุด — คำว่า "คำร่ม" เป็นการแปลตรงตัว (calque) จาก umbrella term ซึ่งไม่ปรากฏในพจนานุกรมฉบับราชบัณฑิตยสถาน กฎการห้ามแปลตรงตัวเพิ่มไว้ใน `.agents/thai-regulator-writing-style.md` §7.5 (MASA-167) |
 | 1.6 | 6 สิงหาคม 2569 | เพิ่ม cross-reference จาก §5.3 ไปยังแผนภาพลำดับ (sequence diagram) ของ cascade การเพิกถอน WIA/KA และตารางสรุปรูปแบบการเพิกถอนใน [บทที่ 13 §13.7.5–§13.7.6](13-vc-status-and-revocation.md) ตามข้อสังเกตของผู้ทบทวนที่ขอแผนภาพลำดับของทุกรูปแบบการเพิกถอน (MASA-158) |
 | 1.5 | 6 สิงหาคม 2569 | แยก WUA เป็นคำรวม (umbrella term) ที่ประกอบด้วย Wallet Instance Attestation (WIA) และ Key Attestation (KA) — เพิ่ม WIA/KA ใน §2.1 เพิ่ม §2.3 อธิบายการแบ่งประเภท และเขียน §5.2–§5.3 ใหม่ให้การเพิกถอนและสถานะของ WIA และ KA เป็นไปตาม EUDI (IETF Token Status List ผ่าน field `client_status` และ `key_storage_status` ลงลายมือชื่อด้วย ES256/384/512) ตาม EUDI ARF 2.9.0 TS3 แก้ข้อความในเวอร์ชัน 1.4 ที่ระบุว่า WUA มิได้ใช้ IETF Token Status List ให้ถูกต้อง (สถานะ WUA ใช้ Token Status List แต่เป็นคนละรายการกับสถานะเอกสารรับรอง) (MASA-158) |
 | 1.4 | 6 สิงหาคม 2569 | แก้ §5 ให้ถูกต้อง — เพิ่ม §5.1 อายุการใช้งานของ WUA (WUA เป็นหลักฐานอายุสั้น ใช้ครั้งเดียว/ออกเป็นชุด เพื่อลด linkability ตาม HLR WUA_09 และ Topic A) และเพิ่ม §5.3 แยกกลไกสถานะ WUA (กลไกของ wallet provider แบบ privacy-preserving ตาม EUDI TS3) ออกจากกลไกสถานะเอกสารรับรอง (IETF Token Status List) แก้ข้อความเดิมที่ระบุว่าสถานะ WUA สอดคล้องกับ IETF Token Status List ให้ถูกต้อง (MASA-158) |
-| 1.3 | 6 สิงหาคม 2569 | ยุบเนื้อหาให้กระชับ ปรับกรอบให้ WUA เป็นแนวคิดของ EUDI ที่ไทยนำมาใช้ ตัดการกล่าวซ้ำรายละเอียดเชิงมาตรฐาน (ฐานกฎหมายรายมาตรา โครงสร้างข้อมูล ตาราง HLR การเปรียบเทียบ WTE) และชี้ไปยังต้นฉบับ EUDI คงเฉพาะการใช้งานในกระแสงาน OID4VCI/OID4VP และความสัมพันธ์กับ Trusted List (MASA-158) |
+| 1.3 | 6 สิงหาคม 2569 | ยุบเนื้อหาให้กระชับ ปรับกรอบให้ WUA เป็นแนวคิดของ EUDI ที่ไทยนำมาใช้ ตัดการกล่าวซ้ำรายละเอียดเชิงมาตรฐาน (ฐานกฎหมายรายมาตรา โครงสร้างข้อมูล ตาราง HLR การเปรียบเทียบ WTE) และชี้ไปยังต้นฉบับ EUDI คงเฉพาะการใช้งานใน flow OID4VCI/OID4VP และความสัมพันธ์กับ Trusted List (MASA-158) |
 | 1.2 | 6 สิงหาคม 2569 | ปรับสถานะ WUA เป็นข้อบังคับ (MANDATORY) ในขั้นปัจจุบัน (MASA-157) |
 | 1.1 | 6 สิงหาคม 2569 | ตัดการอ้างถึง Phase 2/Phase 3 และยุบแผนแบ่งระยะ (MASA-157) |
 | 1.0 | 4 สิงหาคม 2569 | ฉบับร่างแรก — แทนที่ WTE ด้วย WUA ตาม EUDI ARF 2.9.0 (MASA-127) |

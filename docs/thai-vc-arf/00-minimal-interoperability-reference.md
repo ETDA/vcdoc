@@ -34,7 +34,7 @@ description: "ชุด VC ของประเทศไทย — สรุป
 
 หน้านี้กำหนดรูปแบบเป้าหมายสำหรับการพัฒนา ต้นแบบ (PoC) ปัจจุบันมี 3 ส่วน:
 
-1. LoTE (List of Trusted Entities) รายการเดียวที่บรรจุผู้ออก ผู้ตรวจ และผู้ให้บริการกระเป๋าทั้งหมด
+1. LoTE (List of Trusted Entities) แยกเป็น 3 ไฟล์ตามบทบาท คือ ผู้ออก (`iss.jwt`) ผู้ตรวจ (`ver.jwt`) และผู้ให้บริการกระเป๋า (`wp.jwt`) ตามข้อ 12.1.2
 2. แอปกระเป๋าที่เชื่อถือเอนทิตีผ่าน Trusted List เท่านั้น ไม่ใช้ใบรับรอง เอนทิตีแต่ละรายประกาศกุญแจสาธารณะใน Trusted List ในรูป `did:web` หรือสายอักขระกุญแจสาธารณะ
 3. Wallet Instance Attestation (WIA) ยังไม่ได้ทำ
 
@@ -42,7 +42,7 @@ description: "ชุด VC ของประเทศไทย — สรุป
 
 องค์ประกอบหลัก 5 ส่วน คือ
 
-- **รูปแบบ VC:** ระบบรองรับหลายรูปแบบ โดย v1.1 ใช้ JSON-LD ตาม W3C VC Data Model ซึ่งยังคงรองรับ และเพิ่ม IETF SD-JWT VC (`dc+sd-jwt`) เป็นรูปแบบที่แนะนำสำหรับการออกใหม่
+- **รูปแบบ VC:** รายงานไม่บังคับรูปแบบใด รูปแบบที่แนะนำเพื่อการทำงานข้ามระบบคือ W3C VC Data Model v1.1 และ v2.0 ซึ่งใช้ JSON-LD, IETF SD-JWT VC (`dc+sd-jwt`) ซึ่งแนะนำสำหรับการออกใหม่ และ `mdoc` ตาม ISO/IEC 18013-5
 - **โปรโตคอลการออก:** OpenID for Verifiable Credential Issuance (OID4VCI) 1.0 Final แบบ pre-authorized code flow
 - **โปรโตคอลการแสดง:** OpenID for Verifiable Presentations (OID4VP) 1.0 Final พร้อม DCQL
 - **ความน่าเชื่อถือ:** Trusted List ตาม ETSI TS 119 602 ซึ่ง สพธอ. เป็นผู้ลงลายมือชื่อและเผยแพร่ผ่าน CDN โดยไม่ใช้สายใบรับรองของ CA
@@ -54,11 +54,11 @@ description: "ชุด VC ของประเทศไทย — สรุป
 
 การออกใช้ OID4VCI 1.0 Final แบบ pre-authorized code flow ระบบยังคงรองรับ VC เดิมตาม W3C Verifiable Credentials Data Model v1.1 และเพิ่ม SD-JWT VC (`dc+sd-jwt`) สำหรับการออกเอกสารใหม่
 
-ก่อนขอรหัส OTP จากผู้ใช้ กระเป๋าจะตรวจผู้ออกกับ Trusted List ก่อน (Trust Check 3 รอบแรก ย่อเป็น TC-3 รอบแรก) ถ้าผู้ออกไม่ได้ `active` สำหรับประเภท VC นั้น กระบวนการจะหยุดทันที
+ก่อนขอรหัส OTP จากผู้ใช้ กระเป๋าจะตรวจผู้ออกกับ Trusted List ก่อน (Trust Check 3 รอบแรก ย่อเป็น TC-3 รอบแรก) ถ้าบริการของผู้ออกไม่อยู่ใน Trusted List กระบวนการจะหยุดทันที
 
 ที่ระดับ IAL2.3 ขึ้นไป access token จะผูกกับกุญแจของกระเป๋าด้วย DPoP (RFC 9449)
 
-หากเลือกใช้ Wallet Attestation client authentication ตาม OID4VCI Appendix E, Wallet ส่ง Attestation ใน PAR หรือ Token Request พร้อม Client Attestation PoP ตามมาตรฐานที่อ้างถึง. Authorization Server ตรวจลายมือชื่อ Attestation จาก Issuer ที่เชื่อถือและตรวจ PoP. Credential Request ส่ง `proofs.jwt` เพื่อพิสูจน์การครอบครองกุญแจที่จะผูกกับ VC. Trust source และการตรวจสถานะ Wallet เพิ่มเติมเป็นไปตาม Thai profile. แผนภาพนี้ใช้ Pre-Authorized Code Flow จึงแสดง client authentication ที่ Token Request.
+ใน OID4VCI Wallet ส่ง Wallet Attestation และ Client Attestation PoP ตาม OID4VCI Appendix E ใน PAR หรือ Token Request ทุกครั้ง ไม่มีเงื่อนไขให้เลือกใช้
 
 ก่อนจัดเก็บ VC กระเป๋าจะตรวจลายมือชื่อของผู้ออก ช่วงเวลาที่ใช้ได้ และค่า status ใน Status List (TC-3 รอบที่สอง และ TC-4)
 
@@ -81,9 +81,9 @@ sequenceDiagram
     W->>TL: TC-3 รอบแรก: ผู้ออก active + ประเภท VC ที่อนุญาต
     W->>U: ขอรหัส OTP (tx_code)
 
-    Note over W,I: OTP + token (TC-2 เมื่อ Thai profile กำหนด)
-    W->>I: POST /token + OTP, Wallet Attestation/Client Attestation PoP หากใช้กลไกนี้
-    I->>I: ตรวจ Attestation จาก Issuer ที่เชื่อถือและ PoP, ตรวจสถานะเพิ่มเติมตาม Thai profile
+    Note over W,I: OTP + token (TC-2 บังคับทุก Wallet)
+    W->>I: POST /token + OTP, Wallet Attestation + Client Attestation PoP
+    I->>I: ตรวจ Attestation จาก Wallet Provider ที่เชื่อถือ และตรวจ PoP
     I-->>W: Token Response: access_token
     opt Issuer Metadata ระบุ Nonce Endpoint
         W->>I: POST Nonce Endpoint (ไม่ใช้ Access Token)
@@ -102,17 +102,17 @@ sequenceDiagram
 
 การแสดงใช้ OID4VP 1.0 Final พร้อม DCQL แทน Presentation Exchange
 
-ก่อนแสดงหน้าขอความยินยอม กระเป๋าจะตรวจผู้ตรวจกับ Trusted List (Trust Check 1 ย่อเป็น TC-1) ว่า `active` อยู่หรือไม่ และข้อความยืนยัน (claims) กับวัตถุประสงค์ (purpose) ที่ขอ อยู่ในขอบเขตที่ลงทะเบียนไว้หรือไม่ ถ้าไม่ กระเป๋าจะไม่ส่งอะไรออกไปเลย
+ก่อนแสดงหน้าขอความยินยอม กระเป๋าจะตรวจผู้ตรวจกับ Trusted List (Trust Check 1 ย่อเป็น TC-1) ว่าบริการของผู้ตรวจยังอยู่ใน Trusted List หรือไม่ และข้อความยืนยัน (claims) กับวัตถุประสงค์ (purpose) ที่ขอ อยู่ในขอบเขตที่ลงทะเบียนไว้หรือไม่ ถ้าไม่ กระเป๋าจะไม่ส่งอะไรออกไปเลย
 
 จากนั้นผู้ตรวจจะตรวจ 3 ข้อ คือ
 
-- Trust Check 2 (TC-2): **ใน OID4VP** Wallet รัฐบาลต้องส่ง WIA และ WIA-PoP และ Verifier ต้องตรวจทั้งคู่; Wallet เอกชนเลือกส่งทั้งคู่หรือไม่ส่งทั้งคู่ได้ หากเอกชนไม่ส่งทั้งคู่ Verifier ข้าม TC-2 และตรวจ TC-3/TC-4 ต่อ หากส่งไม่ครบหรือรายการใดตรวจไม่ผ่าน ให้ปฏิเสธ VP Verifier ต้องจำแนกประเภท Wallet โดยใช้ข้อมูล Wallet Provider จากแหล่งที่เชื่อถือได้และเป็นอิสระจาก WIA ตามที่ Thai profile กำหนด; หากไม่มีข้อมูล ตรวจความสดใหม่ไม่ได้ หรือจำแนกประเภทไม่ได้ ให้ปฏิเสธ VP (ดู [§8.4.2](08-implementation-guidelines.md) และ [§12.1.4](12.1-trust-list-publication-profile.md)) กฎนี้เป็นส่วนขยาย OID4VP และไม่เปลี่ยนข้อกำหนด OID4VCI
+- Trust Check 2 (TC-2): **ใน OID4VP** Wallet ทุกตัวส่ง WIA และ WIA-PoP และ Verifier ต้องตรวจทั้งคู่; ขาดรายการใดหรือรายการใดไม่ผ่าน ให้ปฏิเสธ VP และไม่มีเส้นทางข้าม TC-2
 - Trust Check 3 (TC-3): ผู้ออกอยู่ใน Trusted List และ DID ของผู้ออก resolve ได้เป็นกุญแจที่ใช้ลงลายมือชื่อใน VC
 - Trust Check 4 (TC-4): อ่านค่า status ที่ index ของ VC ตามความกว้าง `bits` จาก Status List ของผู้ออก
 
 ลายมือชื่อถูกต้องอย่างเดียวไม่พอที่จะยอมรับ VC
 
-ตัวระบุ: หน่วยงานใช้ `did:web` ผู้ถือใช้ `did:jwk` ส่วนระบบตัวตนของไทย เช่น NDID ใช้ custom DID method และ resolve ผ่าน ETDA Trust Gateway ซึ่งทำหน้าที่เป็น Universal Resolver
+ตัวระบุ: หน่วยงานใช้ `did:web` ผู้ถือใช้ `did:jwk` ส่วน `did:ndid` เป็น proprietary DID method ของ NDID ผู้อ่านต้องติดต่อ NDID เพื่อ resolve DID Document
 
 ```mermaid
 sequenceDiagram
@@ -120,7 +120,7 @@ sequenceDiagram
     participant W as กระเป๋าเอกสารดิจิทัล
     participant V as ผู้ตรวจสอบเอกสาร
     participant TL as Trusted List (สพธอ.)
-    participant R as Universal Resolver
+    participant R as resolver ของ DID method
     participant SL as รายการสถานะ
 
     Note over U,TL: ขอข้อมูล + TC-1 ตรวจผู้ตรวจ
@@ -132,15 +132,12 @@ sequenceDiagram
     W->>U: ขอความยินยอม: วัตถุประสงค์ + ข้อความยืนยัน
     U-->>W: อนุมัติ (เปิดเผยข้อมูลแบบเลือกได้)
     W->>V: vp_token
-    Note over V,TL: จำแนกประเภท Wallet
-    alt Wallet รัฐบาล หรือ Wallet เอกชนส่งหลักฐานครบคู่
-        W->>V: WIA + WIA-PoP (ส่งครบคู่)
+    alt TC-2 ผ่าน (WIA และ WIA-PoP ครบและตรวจผ่าน)
+        W->>V: WIA + WIA-PoP
         Note over V,TL: TC-2 ตรวจ WIA และ WIA-PoP
         V->>TL: ตรวจ Wallet Provider ในรายการ
-        TL-->>V: Provider active / WIA ถูกต้อง
-    else Wallet เอกชนไม่ส่งทั้งคู่
-        Note over V: ข้าม TC-2 ตรวจ TC-3 และ TC-4 ต่อ
-    else Wallet รัฐบาลขาดหลักฐาน หรือ Wallet เอกชนส่งไม่ครบคู่
+        TL-->>V: พบผู้ให้บริการกระเป๋า / ลายมือชื่อถูกต้อง
+    else ขาดรายการใด หรือตรวจไม่ผ่าน
         V->>W: ปฏิเสธ VP
     end
 
@@ -159,13 +156,13 @@ sequenceDiagram
 
 สพธอ. ตรวจรับรอง (audit) ทุกหน่วยงานที่จะเป็นผู้ออก ผู้ตรวจ หรือผู้ให้บริการกระเป๋า แล้วลงลายมือชื่อบันทึกไว้ใน Trusted List ที่เกี่ยวข้องจำนวน 3 รายการ แยกตามบทบาท และจัดทำในรูปแบบ JWT เผยแพร่ผ่าน CDN โดยไม่ต้องใช้ API key ลายมือชื่อของ สพธอ. คือเหตุผลเดียวที่ทำให้เชื่อถือรายการนี้ได้ [research/41]
 
-payload ของ JWT รูปแบบเป้าหมายใช้ `LoTE.ListAndSchemeInformation` สำหรับชนิดรายการ ลำดับ และเวลา ใช้ `LoTE.TrustedEntitiesList[]` สำหรับองค์กร และใช้ `TrustedEntityServices[].ServiceInformation` สำหรับแต่ละบริการ กุญแจสาธารณะหรือ DID ของบริการอยู่ใน `ServiceDigitalIdentity.PublicKeyValues[]` หรือ `OtherIds[]` ตามลำดับ [research/42](../research/42-trusted-list-lote-jwt-format.md)
+payload ของ JWT รูปแบบเป้าหมายใช้ `LoTE.ListAndSchemeInformation` สำหรับชนิดรายการ ลำดับ และเวลา ใช้ `LoTE.TrustedEntitiesList[]` สำหรับองค์กร และใช้ `TrustedEntityServices[].ServiceInformation` สำหรับแต่ละบริการ กุญแจสาธารณะหรือ DID ของบริการอยู่ใน `ServiceDigitalIdentity.X509Certificates[].val` หรือ `ServiceDigitalIdentity.OtherIds[]` ตามลำดับ [research/42](../research/42-trusted-list-lote-jwt-format.md)
 
-Thai profile ต้องระบุสถานะระดับองค์กรและระดับบริการ ช่วงเวลาที่มีผล และขอบเขตสิทธิ์รายบทบาท โดยผู้ออกต้องระบุประเภท VC ที่ออกได้ และผู้ตรวจต้องระบุ claims กับวัตถุประสงค์ที่ขอได้ สถานะทั้งสองระดับต้องเป็น `active` ก่อนเชื่อถือเอนทิตี ทั้งนี้ JWT ตัวอย่างปัจจุบันยังแสดงฟิลด์เหล่านี้ไม่ครบ จึงใช้เป็น test vector สำหรับตัดสินสิทธิ์ไม่ได้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
+Thai profile ต้องระบุช่วงเวลาที่มีผล และขอบเขตสิทธิ์รายบทบาท โดยผู้ออกต้องระบุประเภท VC ที่ออกได้ และผู้ตรวจต้องระบุ claims กับวัตถุประสงค์ที่ขอได้ บริการที่อยู่ใน Trusted List ถือว่าใช้งานอยู่ ไม่มีช่องสถานะให้ตรวจ และไฟล์ยังไม่ประกาศช่องประเภท VC ของผู้ออกหรือ claims ของผู้ตรวจ ทั้งนี้ JWT ตัวอย่างปัจจุบันยังแสดงฟิลด์เหล่านี้ไม่ครบ จึงใช้เป็น test vector สำหรับตัดสินสิทธิ์ไม่ได้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
 
-ผู้เข้าร่วมดึง Trusted List ที่เกี่ยวข้องฉบับเต็มเฉพาะตอนต้องตัดสินความน่าเชื่อถือ ไม่มีการ polling อยู่เบื้องหลัง ไม่ใช้ API key, delta หรือไฟล์ CBOR และถ้าดึงหรือตรวจลายมือชื่อไม่ได้ ให้ปฏิเสธการเชื่อมต่อนั้น (fail closed) การเพิกถอนในระดับเอนทิตีจะไปถึงแต่ละเอนทิตีเมื่อดึงครั้งถัดไป [research/41]
+ผู้เข้าร่วมเก็บ snapshot ของ Trusted List ที่ตรวจลายมือชื่อแล้วไว้ในหน่วยความจำ และดึงฉบับใหม่เฉพาะเมื่อ snapshot หมด soft TTL (90 ถึง 120 วินาที) ไม่มีการ polling อยู่เบื้องหลัง ไม่ใช้ API key, delta หรือไฟล์ CBOR ถ้า refresh ไม่สำเร็จยังใช้ snapshot เดิมต่อได้จนถึง maximum staleness และเมื่อพ้น maximum staleness จึงปฏิเสธการเชื่อมต่อนั้น (fail closed) การเพิกถอนในระดับเอนทิตีจะไปถึงแต่ละเอนทิตีเมื่อ refresh ครั้งถัดไป [research/41][research/43]
 
-ผู้ตรวจต้องใช้ Trusted List เพื่อตัดสินสิทธิ์ของเอนทิตี และใช้ DID Document เพื่อรับกุญแจสำหรับตรวจลายมือชื่อ สพธอ. ลงลายมือชื่อ Trusted List จาก HSM ระดับ FIPS 140-3 Level 3 ด้วยเกณฑ์ M-of-N เช่น 3-of-5 พร้อมกุญแจฉุกเฉิน (emergency key) ที่เก็บแบบออฟไลน์
+ผู้ตรวจต้องใช้ Trusted List เพื่อตัดสินสิทธิ์ของเอนทิตี และใช้ DID Document เพื่อรับกุญแจสำหรับตรวจลายมือชื่อ โดยกุญแจที่ได้ต้องตรงกับ `ServiceDigitalIdentity` ของบริการนั้นใน Trusted List สพธอ. ลงลายมือชื่อ Trusted List จาก HSM ระดับ FIPS 140-3 Level 3 ด้วยเกณฑ์ M-of-N เช่น 3-of-5 พร้อมกุญแจฉุกเฉิน (emergency key) ที่เก็บแบบออฟไลน์ และผู้ใช้ข้อมูลตรวจลายมือชื่อนั้นด้วยใบรับรองใน header `x5c`
 
 ### ตัวอย่าง Trusted List
 
@@ -177,13 +174,15 @@ JWT ตัวอย่างต่อไปนี้ใช้ศึกษาโ�
 
 ## การเพิกถอนและสถานะ
 
-ผู้ออกแต่ละรายเผยแพร่ Token Status List ของตนเอง (อ้าง revision ในบรรณานุกรม) ค่า status ที่ IETF กำหนดคือ `0x00 = VALID`, `0x01 = INVALID`, `0x02 = SUSPENDED`; `0x03 = rotated` เป็นส่วนขยาย Thai profile ไม่ใช่ความหมายที่ IETF ลงทะเบียน ค่า `bits` ใน Status List คือความกว้างของช่องต่อรายการ: ต้องมีอย่างน้อย `bits: 2` เมื่อใช้ `SUSPENDED` หรือ `rotated`
+ผู้ออกแต่ละรายเผยแพร่ Token Status List ของตนเอง (อ้าง revision ในบรรณานุกรม) Thai profile ใช้ `0x00 = VALID`, `0x01 = INVALID` และ `0x02 = SUSPENDED`; ค่า application-specific ที่ profile ไม่รองรับต้องถูกปฏิเสธ ค่า `bits` คือความกว้างของช่องต่อรายการ: ใช้ `bits: 1` ได้เมื่อมีเฉพาะ `VALID` กับ `INVALID` และต้องใช้ `bits: 2` เมื่อใช้ `SUSPENDED`.
 
 ผู้ออกมีเป้าหมายเผยแพร่การเปลี่ยนแปลงภายใน 15 นาที โดยระยะเวลารวมของกระบวนการอาจนานกว่านั้น ผู้ตรวจต้องอ่านตำแหน่ง Status List จากข้อมูลที่ Thai profile กำหนดไว้ใน Trusted List และอ่านค่า status ที่ index ตามความกว้าง `bits` ทุกครั้งที่มีการนำเสนอ (TC-4) โดย JWT ตัวอย่างใน [research/42](../research/42-trusted-list-lote-jwt-format.md) ยังไม่แสดงฟิลด์ตำแหน่งดังกล่าว
 
 นอกจากระดับ VC รายใบแล้ว การเพิกถอนยังทำได้ที่ระดับที่สูงกว่า ถ้า สพธอ. ระงับหรือเพิกถอนผู้ออก VC ทุกใบของผู้ออกนั้นจะตรวจไม่ผ่านทันที โดยไม่ต้องเปลี่ยนค่า status รายใบ เพราะรายการบทบาทของผู้ออกไม่ได้ `active` อีกต่อไป ถ้าผู้ให้บริการกระเป๋าเพิกถอน wallet attestation ผู้ออกที่ผูก VC ไว้กับหน่วยกระเป๋านั้นต้องเพิกถอน VC เหล่านั้นตามไปด้วย และ VC ทุกใบจะหมดอายุที่ `validUntil` โดยไม่ต้องอาศัยกลไกใดข้างต้น
 
-การเพิกถอนฉุกเฉินจะไปถึงแต่ละเอนทิตีเมื่อดึงครั้งถัดไป โดยไม่มี message broker หรือการ polling เบื้องหลัง ตาม [§12.8](12-key-management-and-trustlist-deployment.md)
+การเพิกถอนฉุกเฉินจะไปถึงแต่ละเอนทิตีเมื่อ snapshot หมดอายุและ refresh ครั้งถัดไป ซึ่งโดยปกติไม่เกิน soft TTL ตาม [§12.8](12-key-management-and-trustlist-deployment.md) โดยไม่มี message broker หรือการ polling เบื้องหลัง
+
+**มีคำถามอื่น:** ดู [บทที่ 17 คำถามที่พบบ่อย](17-faq.md)
 
 ---
 

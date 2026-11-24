@@ -29,8 +29,8 @@ description: "7. การทำงานร่วมกันข้ามระ
 1. ผู้ออกเอกสาร (issuer) ในแต่ละระบบนิเวศต้องสร้าง DID Document ในรูปแบบ Legal Person แล้วนำไปลงทะเบียน (register) ในระบบทะเบียนเอกสารรับรอง (registry)
 2. ผู้ถือเอกสารร้องขอข้อมูลจากระบบนิเวศใดก็ได้ตามข้อมูลที่ต้องการ โดย VC ที่ได้รับจากผู้ออกเอกสารของแต่ละระบบนิเวศจะถูกจัดเก็บไว้ในกระเป๋าเอกสารดิจิทัลของผู้ถือเอกสาร
 3. ผู้ถือเอกสารส่งข้อมูลให้ผู้ตรวจสอบเอกสาร (verifier) โดยต้องจัดทำข้อมูลให้อยู่ในรูปแบบ VP ก่อนเสมอ
-4. เมื่อผู้ตรวจสอบเอกสารต้องการตรวจสอบความถูกต้องของข้อมูลที่ได้รับ ต้องมี DID Document ของผู้ออก VC ก่อน จึงเรียกดู DID Document ของผู้ออกเอกสารที่ลงทะเบียนไว้ผ่าน DIF Universal Resolver
-5. DIF Universal Resolver ส่งกลับ (return) DID Document ของผู้ออกเอกสารที่ลงทะเบียนไว้ในระบบทะเบียนให้แก่ผู้ตรวจสอบเอกสาร
+4. เมื่อผู้ตรวจสอบเอกสารต้องการตรวจสอบความถูกต้องของข้อมูลที่ได้รับ ต้องมี DID Document ของผู้ออก VC ก่อน จึงเรียกดู DID Document ที่ลงทะเบียนไว้ผ่าน resolver ของ DID method นั้น หรือผ่าน resolver ของ สพธอ. ในกรณีที่เป็น public DID method
+5. resolver ของ DID method หรือของ สพธอ. ส่ง DID Document ของผู้ออกเอกสารที่ลงทะเบียนไว้ให้แก่ผู้ตรวจสอบเอกสาร
 6. ผู้ตรวจสอบเอกสารนำ DID Document ที่ได้ไปตรวจสอบความถูกต้องของ VC ต่อไป
 
 > **ส่วนขยายเวอร์ชัน 2.0:** หัวข้อ 7.1–7.10 ต่อไปนี้เพิ่มชั้น Trusted List เข้ากับภาพรวมข้างต้น เพื่อกำหนดว่าเอนทิตีใดได้รับการรับรองให้ทำหน้าที่ใด มีสถานะใด และมีขอบเขตเพียงใด โดยใช้ร่วมกับการ resolve DID ตามข้างต้น
@@ -63,15 +63,15 @@ Trusted List **มิได้รับรองความถูกต้อ�
 ผู้เข้าร่วม ecosystem **ต้อง (MUST)** ปฏิบัติดังต่อไปนี้
 
 1. ตรวจลายมือชื่อและความถูกต้องของ Trusted List ก่อนใช้ข้อมูลภายในรายการ
-2. ตรวจชนิดบริการจาก `ServiceInformation.ServiceTypeIdentifier` ตรวจสถานะระดับองค์กรและบริการ ช่วงเวลาที่มีผล กุญแจหรือ DID จาก `ServiceDigitalIdentity` และขอบเขตสิทธิ์ตาม Thai profile ที่ประกาศใช้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
-3. resolve DID Document และตรวจลายมือชื่อของ VC, VP หรือ request object แยกจากการตรวจ Trusted List
+2. ตรวจชนิดบริการจาก `ServiceInformation.ServiceTypeIdentifier` ตรวจช่วงเวลาที่มีผล กุญแจหรือ DID จาก `ServiceDigitalIdentity` และขอบเขตสิทธิ์ตาม Thai profile ที่ประกาศใช้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
+3. resolve DID Document เพื่อตรวจลายมือชื่อของ VC, VP หรือ request object และเทียบกุญแจที่ได้กับ `ServiceDigitalIdentity` ของบริการใน Trusted List ก่อนใช้ตรวจ ตามข้อ 8.4.3
 4. ตรวจ credential status และ holder binding ตาม profile ของ credential
 5. ปฏิเสธ transaction เมื่อ Trusted List หรือ role หมดอายุ ถูกระงับ หรือถูกเพิกถอน เว้นแต่ governance policy กำหนด exception ที่มีหลักฐานตรวจสอบย้อนหลัง
 6. ใช้ OID4VCI 1.0 Final สำหรับ issuance และ OID4VP 1.0 Final สำหรับ presentation ตาม national profile [R2] [R3]
 
 ผู้เข้าร่วม **ควร (SHOULD)** รองรับ Issuer และ Verifier มากกว่าหนึ่งรายโดยไม่ผูกกับ vendor เดียว และ **ควร (SHOULD)** แยกการตัดสินใจ 4 ชั้นให้ชัดเจน ได้แก่ protocol conformance, cryptographic validity, trust authorization และ business acceptance
 
-ผู้เข้าร่วม **อาจ (MAY)** ใช้ Universal Resolver เพื่อรองรับ DID Method หลายชนิด แต่ผลจาก Resolver เพียงอย่างเดียวไม่ถือเป็นหลักฐานว่าเอนทิตีได้รับอนุญาตภายใต้ Trusted List
+ผู้เข้าร่วม **อาจ (MAY)** ใช้ resolver ของ สพธอ. หรือรัน resolver เอง เพื่อรองรับ DID Method หลายชนิด แต่ผลจาก resolver เพียงอย่างเดียวไม่ถือเป็นหลักฐานว่าเอนทิตีได้รับอนุญาตภายใต้ Trusted List
 
 ## 7.4 ลำดับการตรวจสอบข้าม Issuer และ Verifier
 
@@ -117,18 +117,18 @@ sequenceDiagram
 - **Functional Conformance Assessment Framework (FCAF)** — ชุดทดสอบกลางที่เผยแพร่และดูแลที่ `https://conformance.eudi.dev` ผู้ที่อ้าง conformance กับ EUDI ARF **ต้อง (MUST)** อ้างผลทดสอบจากแหล่งนี้เป็นหลักฐาน
 - **Alignment with the amending Commission Implementing Regulations** — CIR 2024/2977 (PID/EAA), CIR 2024/2979 (integrity/core functionalities), CIR 2024/2980 (ecosystem notifications), CIR 2024/2982 (protocols/interfaces) และ CIR 2025/848 (Wallet-Relying Party registration)
 
-**ข้อเท็จจริง:** การใช้ OID4VCI/OID4VP 1.0 Final [R2] [R3], SD-JWT VC หรือ DID ที่เหมือนกันช่วยลดความต่างของ protocol และ credential format แต่ **ไม่ทำให้ Thai Trusted List ได้รับการยอมรับใน EUDI ecosystem โดยอัตโนมัติ** เนื่องจาก EUDI trust infrastructure อิงกับ ETSI TS 119 612/602 และ rulebook (PID, mDL, EAA) ที่กำหนดเงื่อนไขของตนเอง
+**ข้อเท็จจริง:** การใช้ OID4VCI/OID4VP 1.0 Final [R2] [R3], SD-JWT VC หรือ DID ที่เหมือนกันช่วยลดความต่างของ protocol และ credential format แต่ **ไม่ทำให้ Trusted List ของ สพธอ. ได้รับการยอมรับใน EUDI ecosystem โดยอัตโนมัติ** เนื่องจาก EUDI trust infrastructure อิงกับ ETSI TS 119 612/602 และ rulebook (PID, mDL, EAA) ที่กำหนดเงื่อนไขของตนเอง
 
 สำหรับการเชื่อมโยงข้ามพรมแดน ผู้ดำเนินการ **ต้อง (MUST)** จัดให้มีองค์ประกอบเพิ่มเติมอย่างน้อยดังนี้
 
 1. **Trust agreement หรือ recognition arrangement:** ระบุคู่ภาคี ขอบเขต credential/use case ระดับ assurance หน้าที่รับผิด ความรับผิดทางกฎหมาย การตรวจประเมิน การเพิกถอน และการระงับข้อพิพาท กรณี EU อ้างอิงคือกระบวนการ third-country recognition ภายใต้ Regulation (EU) 2024/1183 [R5]
-2. **Trust mapping:** แปลง role, status, assurance และ policy ของ Thai Trusted List ให้ตรงกับ trust model และ rulebook ที่ปลายทางยอมรับ (เช่น PID Rulebook, mDL Rulebook) [R4]
+2. **Trust mapping:** แปลง role, status, assurance และ policy ของ Trusted List ของ สพธอ. ให้ตรงกับ trust model และ rulebook ที่ปลายทางยอมรับ (เช่น PID Rulebook, mDL Rulebook) [R4]
 3. **Technical profile agreement:** ตกลง credential format, protocol profile, cryptographic suites, identifier/client authentication, status mechanism และ schema ให้สอดคล้องกับ Credential Format Profile ที่ EUDI ARF กำหนด
 4. **Trusted-list distribution/bridge:** หากปลายทางกำหนดรูปแบบหรือ trust anchor ต่างกัน (เช่น ETSI TS 119 612 XML หรือ LoTEs) **ต้อง (MUST)** มี bridge หรือ dual publication ที่ปลายทางตรวจสอบได้ โดย **ต้อง (MUST NOT)** อ้างว่า bridge เท่ากับ legal recognition
 5. **Conformance evidence:** ผลทดสอบ **ต้อง (MUST)** มาจาก Functional Conformance Assessment Framework ที่ EUDI เผยแพร่ที่ `https://conformance.eudi.dev` หรือ pilot ที่ตรวจสอบย้อนกลับได้ ก่อนประกาศรองรับ cross-border
 6. **Operational readiness:** ผู้ดูแล **ต้อง (MUST)** จัดให้มี audit, monitoring, SLA และ 24/7 operations ตามระดับความเสี่ยงที่คู่ภาคีกำหนด
 
-**ข้อวิเคราะห์:** Thai Trusted List ตาม [§9](09-trust-model-3.md) อาจทำหน้าที่เป็นฐานข้อมูลต้นทางสำหรับ bridge ไปยัง EUDI trust infrastructure ได้ เพราะมีข้อมูลเอนทิตี role status และ key reference ที่มี governance กำกับ การวิเคราะห์รูปแบบ cross-border ที่เป็นไปได้ (Hybrid · Split TL · Bridge Service) อยู่ใน [`th/research/34-trustlist-domestic-and-crossborder.md`](../research/34-trustlist-domestic-and-crossborder.md) — เอกสารฉบับนี้ไม่คัดลอกผลวิเคราะห์ แต่ใช้เป็นข้อมูลอ้างอิงเชิงสถาปัตยกรรมเท่านั้น การนำไปใช้จริงขึ้นกับข้อตกลง technical profile และ conformance evidence ที่คู่ภาคียอมรับ
+**ข้อวิเคราะห์:** Trusted List ของ สพธอ. ตาม [§9](09-trust-model-3.md) อาจทำหน้าที่เป็นฐานข้อมูลต้นทางสำหรับ bridge ไปยัง EUDI trust infrastructure ได้ เพราะมีข้อมูลเอนทิตี role status และ key reference ที่มี governance กำกับ การวิเคราะห์รูปแบบ cross-border ที่เป็นไปได้ (Hybrid · Split TL · Bridge Service) อยู่ใน [`th/research/34-trustlist-domestic-and-crossborder.md`](../research/34-trustlist-domestic-and-crossborder.md) — เอกสารฉบับนี้ไม่คัดลอกผลวิเคราะห์ แต่ใช้เป็นข้อมูลอ้างอิงเชิงสถาปัตยกรรมเท่านั้น การนำไปใช้จริงขึ้นกับข้อตกลง technical profile และ conformance evidence ที่คู่ภาคียอมรับ
 
 **ข้อจำกัด:** หัวข้อนี้กำหนดสถาปัตยกรรม โดยยังไม่มีผลทดสอบ interoperability จริง จึง **ห้าม (MUST NOT)** ใช้ข้อความว่า "รองรับ EUDI" หรือ "ได้รับการรับรองจาก EU" ในเอกสาร UI หรือข้อเสนอใด ๆ จนกว่าจะมีหลักฐานตามข้อ 1–6 ครบถ้วน
 
@@ -145,7 +145,7 @@ sequenceDiagram
 
 ## 7.7 ข้อจำกัดและการจัดการความเสี่ยง
 
-1. **Cache freshness:** Client **ต้อง (MUST)** ตรวจ `LoTE.ListAndSchemeInformation.NextUpdate` เมื่อเกินกำหนดหรือหมดอายุ **ต้อง (MUST)** ไม่ถือว่าสถานะเดิมยัง active โดยปริยาย [research/42](../research/42-trusted-list-lote-jwt-format.md)
+1. **Cache freshness:** Client **ต้อง (MUST)** refresh Trusted List ตาม soft TTL ในข้อ 12.8 และ **ต้อง (MUST)** ไม่ถือว่าสถานะเดิมยัง active โดยปริยายเมื่อ snapshot เก่าเกิน maximum staleness ที่ Thai profile กำหนด [research/43](../research/43-trustlist-entity-inmemory-cache.md)
 2. **Governance concentration:** การรวม trust decision ไว้ที่ Trusted List ทำให้ signing key และกระบวนการอนุมัติเป็นจุดสำคัญ ผู้ดูแล **ต้อง (MUST)** ใช้ key protection, dual control, audit log และ incident response
 3. **Semantic mismatch:** ชื่อ credential เหมือนกันอาจมี schema หรือ assurance ต่างกัน ผู้เข้าร่วม **ต้อง (MUST)** ตรวจ rulebook/schema version ไม่ใช้ชื่อประเภทเพียงอย่างเดียว
 4. **Privacy:** รายการสาธารณะ **ต้อง (MUST)** ไม่บรรจุข้อมูลส่วนบุคคลของ Holder และ **ควร (SHOULD)** บรรจุเฉพาะข้อมูลของนิติบุคคล/บริการที่จำเป็นต่อการตัดสินใจ trust
@@ -185,7 +185,7 @@ sequenceDiagram
 
 **แหล่งอ้างอิงที่เกี่ยวข้องในระบบนิเวศ (ไม่ได้ใช้เป็นหลักฐานหลักของข้อกำหนดในหัวข้อนี้):**
 
-- Thai Trusted List cross-border scenarios analysis: [`th/research/34-trustlist-domestic-and-crossborder.md`](../research/34-trustlist-domestic-and-crossborder.md)
+- Trusted List ของ สพธอ. cross-border scenarios analysis: [`th/research/34-trustlist-domestic-and-crossborder.md`](../research/34-trustlist-domestic-and-crossborder.md)
 - EUDI ARF v2.8+ alignment background: [`th/research/30-eu-aligned-trust-model-adaptation.md`](../research/30-eu-aligned-trust-model-adaptation.md)
 - PKI/VC security gap context: [`th/research/31-security-gaps-pki-crypto-vs-vc.md`](../research/31-security-gaps-pki-crypto-vs-vc.md)
 - EUDI Conformance Assessment: https://conformance.eudi.dev — ยังไม่มีผลทดสอบระบบจริงที่แนบกับหัวข้อนี้
