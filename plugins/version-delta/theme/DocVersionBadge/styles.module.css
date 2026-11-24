@@ -1,0 +1,28 @@
+/* The badge carries a version, a date and a compare link, so it must wrap and
+   size in rem rather than sit on the default fixed-height badge box. */
+.badge {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  max-inline-size: 100%;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: normal;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.date {
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.8rem;
+}
+
+.compare {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
