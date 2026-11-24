@@ -1,5 +1,5 @@
 ---
-description: "14. ความมั่นคงปลอดภัย: Threat Model และรายการตรวจ Conformance — Thai VC ARF 2.0 DRAFT 0"
+description: "14. ความมั่นคงปลอดภัย: Threat Model และรายการตรวจ Conformance — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 14. ความมั่นคงปลอดภัย: Threat Model และรายการตรวจ Conformance

@@ -1,5 +1,5 @@
 ---
-description: "8. Implementation Guidelines — OID4VCI / OID4VP และแนวทางการนำไปใช้งาน — Thai VC ARF 2.0 DRAFT 0"
+description: "8. Implementation Guidelines — OID4VCI / OID4VP และแนวทางการนำไปใช้งาน — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 8. Implementation Guidelines — OID4VCI / OID4VP และแนวทางการนำไปใช้งาน

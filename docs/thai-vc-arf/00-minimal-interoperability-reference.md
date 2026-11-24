@@ -1,5 +1,5 @@
 ---
-description: "ชุด VC ของประเทศไทย — สรุปหนึ่งหน้า — Thai VC ARF 2.0 DRAFT 0"
+description: "ชุด VC ของประเทศไทย — สรุปหนึ่งหน้า — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # ชุด VC ของประเทศไทย — สรุปหนึ่งหน้า

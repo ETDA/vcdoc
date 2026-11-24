@@ -1,5 +1,5 @@
 ---
-description: "13. VC Status และ Revocation — Thai VC ARF 2.0 DRAFT 0"
+description: "13. VC Status และ Revocation — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 13. VC Status และ Revocation

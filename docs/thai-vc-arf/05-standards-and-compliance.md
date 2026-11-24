@@ -1,5 +1,5 @@
 ---
-description: "5. มาตรฐานและข้อปฏิบัติสำหรับเอกสารรับรองดิจิทัลและเอกสารสำแดงดิจิทัล (Standards and Compliance for Verifiable Credentials and Presentations) — Thai VC ARF 2.0 DRAFT 0"
+description: "5. มาตรฐานและข้อปฏิบัติสำหรับเอกสารรับรองดิจิทัลและเอกสารสำแดงดิจิทัล (Standards and Compliance for Verifiable Credentials and Presentations) — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 5. มาตรฐานและข้อปฏิบัติสำหรับเอกสารรับรองดิจิทัลและเอกสารสำแดงดิจิทัล (Standards and Compliance for Verifiable Credentials and Presentations)

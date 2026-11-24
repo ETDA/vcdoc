@@ -1,5 +1,5 @@
 ---
-description: "11. Cryptographic Suites — Thai VC ARF 2.0 DRAFT 0"
+description: "11. Cryptographic Suites — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 11. Cryptographic Suites

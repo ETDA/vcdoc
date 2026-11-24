@@ -1,5 +1,5 @@
 ---
-description: "1. ขอบข่าย — Thai VC ARF 2.0 DRAFT 0"
+description: "1. ขอบข่าย — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 1. ขอบข่าย

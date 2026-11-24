@@ -1,5 +1,5 @@
 ---
-description: "4. แนวคิดและองค์ประกอบที่ส่งเสริมให้เกิดการทำงานร่วมกัน (interoperability) — Thai VC ARF 2.0 DRAFT 0"
+description: "4. แนวคิดและองค์ประกอบที่ส่งเสริมให้เกิดการทำงานร่วมกัน (interoperability) — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 4. แนวคิดและองค์ประกอบที่ส่งเสริมให้เกิดการทำงานร่วมกัน (interoperability)

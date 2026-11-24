@@ -1,5 +1,5 @@
 ---
-description: "12. Key Management, Key Rotation และ Trusted List Deployment — Thai VC ARF 2.0 DRAFT 0"
+description: "12. Key Management, Key Rotation และ Trusted List Deployment — Thai VC ARF 2.0 DRAFT 1"
 ---
 
 # 12. Key Management, Key Rotation และ Trusted List Deployment
