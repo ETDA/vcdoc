@@ -110,7 +110,10 @@ test.describe('version chain', () => {
 
     await expect(page.locator('h1')).toContainText('2.0 DRAFT 1');
     const rows = page.locator('table tbody tr');
-    await expect(rows.first()).toContainText('+1');
+    // Counts change with every content sync, so assert the shape of a count
+    // cell rather than one number.
+    await expect(rows.first()).toContainText(/\+\d+/);
+    await expect(rows.first()).toContainText(/[−-]\d+/);
     await expect(rows.first().locator('a')).toHaveAttribute('href', /\/versions\/diff\/2\.0-draft-0__current\//);
     await expect(page.getByRole('link', { name: 'เปิดตารางส่วนต่างระดับข้อ' })).toBeVisible();
   });
