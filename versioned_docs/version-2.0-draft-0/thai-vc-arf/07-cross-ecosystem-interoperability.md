@@ -1,5 +1,6 @@
 ---
 description: "7. การทำงานร่วมกันข้ามระบบนิเวศและผลของ Trusted List — Thai VC ARF 2.0 DRAFT 0"
+sidebar_position: 7
 ---
 
 # 7. การทำงานร่วมกันข้ามระบบนิเวศและผลของ Trusted List

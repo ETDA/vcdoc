@@ -1,5 +1,6 @@
 ---
 description: "Thai VC ARF — 2.0 DRAFT 1 — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: -1
 ---
 
 # Thai VC ARF — กรอบแนวทางการทำงานร่วมกันของเอกสารรับรองดิจิทัล (เวอร์ชัน 1.1 + ส่วนขยาย 2.0 ฉบับร่าง 1)

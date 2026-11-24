@@ -1,5 +1,6 @@
 ---
 description: "11. Cryptographic Suites — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 11
 ---
 
 # 11. Cryptographic Suites

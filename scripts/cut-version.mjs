@@ -14,6 +14,7 @@ import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {chain, formatThaiDate} from '../versions.meta.mjs';
 import {hashTree} from '../versions.hash.mjs';
+import {ensureSidebarPositions} from './lib/positions.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const META = join(ROOT, 'versions.meta.mjs');
@@ -55,6 +56,8 @@ if (!existsSync(join(ROOT, docTree))) {
   console.error(`docs:version reported success but ${docTree} is missing`);
   process.exit(1);
 }
+const normalised = ensureSidebarPositions(join(ROOT, docTree));
+if (normalised > 0) console.log(`sidebar_position written to ${normalised} chapter(s) in ${docTree}`);
 const treeHash = hashTree(docTree);
 
 // "2.0 DRAFT 1" -> "2.0 DRAFT 2"; with no trailing number the next draft keeps

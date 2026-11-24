@@ -1,5 +1,6 @@
 ---
 description: "17. คำถามที่พบบ่อย (FAQ) — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 17
 ---
 
 # 17. คำถามที่พบบ่อย (FAQ)

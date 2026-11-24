@@ -1,5 +1,6 @@
 ---
 description: "6. Decentralized Identifiers Methodologies — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 6
 ---
 
 # 6. Decentralized Identifiers Methodologies

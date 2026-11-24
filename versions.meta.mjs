@@ -36,7 +36,7 @@ export const chain = [
     label: '2.0 DRAFT 0',
     released: '2026-10-06',
     docTree: 'versioned_docs/version-2.0-draft-0',
-    treeHash: '4b140fb623e28c766822c64cf0516bfbfc2a8d4af96895ff1dc307d19deeddaa',
+    treeHash: '237b6f43566b2e5e857bee98ca9c8f304b261146f0cf71cd39b97fd7ce3a5258',
     summary: ['รวมบทที่ 0–16 ฉบับร่างแรก', 'ส่วนขยาย 2.0: บท 6.5 และบท 9–14'],
   },
   {

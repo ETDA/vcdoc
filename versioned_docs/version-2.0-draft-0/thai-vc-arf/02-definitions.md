@@ -1,5 +1,6 @@
 ---
 description: "2. บทนิยาม — Thai VC ARF 2.0 DRAFT 0"
+sidebar_position: 2
 ---
 
 # 2. บทนิยาม

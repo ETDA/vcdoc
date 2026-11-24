@@ -16,6 +16,7 @@ import {readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, copyFil
 import {join, dirname, resolve, relative, basename} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
+import {positionFromFilename} from './lib/positions.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -77,7 +78,9 @@ function withFrontmatter(name, raw) {
     name === 'README.md'
       ? `Thai VC ARF — ${LABEL} — Thai VC ARF ${LABEL}`
       : `${firstHeading(raw)} — Thai VC ARF ${LABEL}`;
-  return `---\ndescription: ${JSON.stringify(description)}\n---\n\n${body}`;
+  const position = positionFromFilename(name);
+  const order = position === null ? '' : `sidebar_position: ${position}\n`;
+  return `---\ndescription: ${JSON.stringify(description)}\n${order}---\n\n${body}`;
 }
 
 function files(dir) {

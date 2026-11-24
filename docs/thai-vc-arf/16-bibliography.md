@@ -1,5 +1,6 @@
 ---
 description: "16. บรรณานุกรม — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 16
 ---
 
 # 16. บรรณานุกรม

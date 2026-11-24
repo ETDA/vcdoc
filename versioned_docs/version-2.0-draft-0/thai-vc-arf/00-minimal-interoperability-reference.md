@@ -1,5 +1,6 @@
 ---
 description: "ชุด VC ของประเทศไทย — สรุปหนึ่งหน้า — Thai VC ARF 2.0 DRAFT 0"
+sidebar_position: 0
 ---
 
 # ชุด VC ของประเทศไทย — สรุปหนึ่งหน้า

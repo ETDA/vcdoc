@@ -1,5 +1,6 @@
 ---
 description: "9. Trust Model 3 — ระบบรายชื่อที่น่าเชื่อถือแบบกระจายศูนย์ด้วย DID (Decentralized Trusted List) — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 9
 ---
 
 # 9. Trust Model 3 — ระบบรายชื่อที่น่าเชื่อถือแบบกระจายศูนย์ด้วย DID (Decentralized Trusted List)

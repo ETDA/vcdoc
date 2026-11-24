@@ -1,5 +1,6 @@
 ---
 description: "10. Wallet Unit Attestation (WUA) — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 10
 ---
 
 # 10. Wallet Unit Attestation (WUA)
