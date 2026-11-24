@@ -129,6 +129,16 @@ test.describe('version chain', () => {
     await expect(page.locator('details li').first()).toContainText(/\S/);
   });
 
+  test('switching versions from the navbar keeps the reader on the same chapter', async ({ page }) => {
+    await page.goto('/vcdoc/thai-vc-arf/scope/');
+
+    await page.locator('.navbar__item.dropdown .navbar__link').first().hover();
+    await page.locator('a.dropdown__link[href="/vcdoc/2.0-draft-0/thai-vc-arf/scope"]').click();
+
+    await expect(page).toHaveURL(/\/vcdoc\/2\.0-draft-0\/thai-vc-arf\/scope\/?$/);
+    await expect(page.locator('.badge')).toContainText('2.0 DRAFT 0');
+  });
+
   test('chapter diff page renders diff markup', async ({ page }) => {
     await page.goto('/vcdoc/versions/diff/2.0-draft-0__current/scope/');
 
