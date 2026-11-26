@@ -129,6 +129,20 @@ test.describe('version chain', () => {
     await expect(page.locator('details li').first()).toContainText(/\S/);
   });
 
+  test('the version badge links to the diff of the chapter being read', async ({ page }) => {
+    await page.goto('/vcdoc/thai-vc-arf/06.5-trust-building-mechanism');
+    const compare = page.locator('a[class*="compare"]');
+
+    await expect(compare).toHaveAttribute(
+      'href',
+      /\/versions\/diff\/2\.0-draft-0__current\/06\.5-trust-building-mechanism$/,
+    );
+    await compare.click();
+
+    await expect(page.locator('h1')).toContainText('06.5-trust-building-mechanism');
+    await expect(page.locator('.d2h-wrapper')).toBeVisible();
+  });
+
   test('switching versions from the navbar keeps the reader on the same chapter', async ({ page }) => {
     await page.goto('/vcdoc/thai-vc-arf/scope/');
 

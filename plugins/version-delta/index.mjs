@@ -95,8 +95,11 @@ export default function versionDeltaPlugin(context) {
       }
     },
 
-    async contentLoaded({actions: {addRoute, createData}}) {
+    async contentLoaded({actions: {addRoute, createData, setGlobalData}}) {
       const routes = [];
+      // docId -> pair -> per-chapter diff route, so a doc page can link the
+      // reader to the diff of the chapter they are reading.
+      const chapterRoutes = {};
 
       const historyData = await createData(
         'versions.json',
@@ -221,6 +224,9 @@ export default function versionDeltaPlugin(context) {
         });
 
         for (const chapter of chapters) {
+          chapterRoutes[from.id] ??= {};
+          chapterRoutes[from.id][to.id] ??= {};
+          chapterRoutes[from.id][to.id][chapter.slug] = `${pairPath}/${chapter.slug}`;
           const data = await createData(
             `delta-${from.id}__${to.id}-${chapter.slug}.json`,
             JSON.stringify(
@@ -249,6 +255,8 @@ export default function versionDeltaPlugin(context) {
           });
         }
       }
+
+      setGlobalData({chapterRoutes});
 
       for (const route of routes) {
         addedRoutePaths.push(route.path);
