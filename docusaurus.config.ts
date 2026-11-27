@@ -5,6 +5,8 @@ import {docusaurusVersions} from './versions.meta.mjs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+const baseUrl = '/vcdoc/';
+
 const config: Config = {
   title: 'Thai VC ARF',
   tagline: 'Thai Verifiable Credentials Architecture and Reference Framework',
@@ -19,7 +21,7 @@ const config: Config = {
   url: 'https://ETDA.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/vcdoc/',
+  baseUrl,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -30,8 +32,15 @@ const config: Config = {
   // ARF source files contain references to material outside this site.
   onBrokenLinks: 'warn',
 
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {rel: 'describedby', href: `${baseUrl}llms.txt`, type: 'text/markdown'},
+    },
+  ],
+
   // Version history pages and the per-pair deltas (see versions.meta.mjs).
-  plugins: ['./plugins/version-delta/index.mjs'],
+  plugins: ['./plugins/version-delta/index.mjs', './plugins/agent-docs/index.mjs'],
 
   markdown: {
     mermaid: true,
