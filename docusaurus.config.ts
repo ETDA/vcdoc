@@ -6,8 +6,8 @@ import {docusaurusVersions} from './versions.meta.mjs';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'VC Document',
-  tagline: 'Thai VC ARF — 2.0 DRAFT 1',
+  title: 'Thai VC ARF',
+  tagline: 'Thai Verifiable Credentials Architecture and Reference Framework',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -93,15 +93,14 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/thai-vc-arf-social-card.jpg',
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'VC Document',
+      title: 'Thai VC ARF',
       logo: {
-        alt: 'VC Document Logo',
+        alt: 'Thai VC ARF Logo',
         src: 'img/favicon.ico',
       },
       items: [

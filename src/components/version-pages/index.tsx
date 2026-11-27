@@ -57,7 +57,7 @@ export function VersionPage({
     <Layout title={title} description={description}>
       <main className="container margin-vertical--lg">
         <header className={styles.pageHeader}>
-          <p className={styles.eyebrow}>ประวัติเวอร์ชัน · VC Document</p>
+          <p className={styles.eyebrow}>ประวัติเวอร์ชัน · Thai VC ARF</p>
           <Heading as="h1">{title}</Heading>
         </header>
         {children}
