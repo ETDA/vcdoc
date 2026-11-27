@@ -1,0 +1,47 @@
+name: ถามคำถามหรือแจ้งข้อผิดพลาด (Question or correction)
+description: ถามเรื่อง Thai VC ARF แจ้งข้อความคลาดเคลื่อน
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        หนึ่งคำถามต่อหนึ่ง issue เพื่อให้ติดตามคำตอบได้ง่าย
+        One question per issue keeps each answer easy to follow.
+
+        กรุณาอย่าใส่ข้อมูลส่วนบุคคล หรือ ข้อมูลลับ
+        Please do not include personal/confidential data.
+  - type: textarea
+    id: request
+    attributes:
+      label: คำถามหรือสิ่งที่พบ (Question or finding)
+      description: ต้องการคำตอบเรื่องอะไร หรือพบข้อความใดคลาดเคลื่อน
+      placeholder: "เช่น §8.2 กำหนดให้ wallet ส่ง request ไปที่ไหน และใครเป็นผู้ตรวจสอบ?"
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: ตำแหน่งในเอกสาร (Location)
+      description: บท ข้อ หรือ URL ของหน้าที่อ้างถึง
+      placeholder: "§8.2 / https://etda.github.io/vcdoc/..."
+    validations:
+      required: false
+  - type: dropdown
+    id: version
+    attributes:
+      label: เวอร์ชัน (Version)
+      options:
+        - 2.0 DRAFT 1 (current)
+        - 2.0 DRAFT 0
+        - 1.1 (PDF)
+        - ไม่แน่ใจ (Not sure)
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: บริบท (Context)
+      description: ระบบที่ใช้ ผลที่คาดไว้ หรือสิ่งที่ลองแล้ว
+      placeholder: "ไม่บังคับ (optional)"
+    validations:
+      required: false

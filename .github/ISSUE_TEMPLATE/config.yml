@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: อ่านเอกสาร Thai VC ARF
+    url: https://etda.github.io/vcdoc/
+    about: เอกสารฉบับเต็ม รวมบทสรุปและบทที่ 1–17
+  - name: ประวัติเวอร์ชันและส่วนต่าง
+    url: https://etda.github.io/vcdoc/versions
+    about: ดูว่าบทไหนเปลี่ยนระหว่างฉบับ
