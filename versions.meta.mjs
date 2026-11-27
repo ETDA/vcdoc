@@ -1,5 +1,5 @@
 /**
- * Single source of truth for the VC Document version chain.
+ * Single source of truth for the Thai VC ARF version chain.
  *
  * Read by docusaurus.config.ts, plugins/version-delta, the theme overrides and
  * scripts/*.mjs. Data only, and free of Node-only imports so the same chain can
