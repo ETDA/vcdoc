@@ -1,5 +1,6 @@
 ---
-description: "16. บรรณานุกรม — Thai VC ARF 2.0 DRAFT 0"
+description: "16. บรรณานุกรม — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 16
 ---
 
 # 16. บรรณานุกรม
@@ -34,8 +35,8 @@ description: "16. บรรณานุกรม — Thai VC ARF 2.0 DRAFT 0"
 
 - [10] OpenID Foundation, "OpenID for Verifiable Credential Issuance 1.0 Final", 17 September 2025. — https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html
 - [11] OpenID Foundation, "OpenID for Verifiable Presentations 1.0 Final", 15 July 2025. — https://openid.net/specs/openid-4-verifiable-presentations-1_0.html
-- [12] IETF, “SD-JWT-based Verifiable Digital Credentials (SD-JWT VC),” draft-ietf-oauth-sd-jwt-vc-19, 31 August 2026 (Internet-Draft; submitted to IESG, Waiting for AD Go-Ahead as accessed 1 October 2026). — https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/
-- [13] IETF, “Token Status List (TSL),” draft-ietf-oauth-status-list-21, 21 June 2026 (Internet-Draft; RFC Editor status: Awaiting First editor as accessed 1 October 2026). — https://datatracker.ietf.org/doc/draft-ietf-oauth-status-list/
+- [12] IETF, “SD-JWT-based Verifiable Digital Credentials (SD-JWT VC),” draft-ietf-oauth-sd-jwt-vc-19, 31 August 2026 (Internet-Draft; submitted to IESG, Waiting for AD Go-Ahead as accessed 1 October 2026). ใช้อ้างอิงเพื่อการอ่าน ไม่เป็นการตรึงรุ่น ส่วนการพัฒนาอ้างฉบับ draft-18 จนกว่า RFC จะออก — https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/
+- [13] IETF, “Token Status List (TSL),” draft-ietf-oauth-status-list-21, 21 June 2026 (Internet-Draft; RFC Editor status: Awaiting First editor as accessed 1 October 2026). PoC ของทีมเทคนิคอยู่บน draft-03 ค่า attribute บางรายการจึงต่างจากฉบับนี้ และจะปรับให้ตรงเมื่อ RFC ออก — https://datatracker.ietf.org/doc/draft-ietf-oauth-status-list/
 - [14] European Commission, "EUDI Architecture and Reference Framework v2.9.0", 2025. — https://eudi.dev/2.9.0/main/
 - [15] IETF RFC 8032, "Edwards-Curve Digital Signature Algorithm (EdDSA)", January 2017.
 - [16] Decentralized Identity Foundation, "Universal Resolver", 2024. — https://github.com/decentralized-identity/universal-resolver

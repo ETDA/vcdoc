@@ -1,5 +1,6 @@
 ---
-description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
+description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 15
 ---
 
 # 15. ภาคผนวก
@@ -32,9 +33,9 @@ description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
 
 (3) กำหนด Holder เพื่อใช้ในการ Request ข้อมูลกับทาง Issuer และรับข้อมูล VC ที่จะได้จาก Issuer รวมถึงส่งข้อมูลในรูปแบบ VP ให้กับทาง Verifier
 
-(4) กำหนด Verifier เพื่อใช้ในการรับข้อมูล VP จาก Holder พร้อมทั้งต้องตรวจสอบความถูกต้องของข้อมูล ตลอดจนการรับ-ส่งข้อมูลกับทาง DIF Universal Resolver
+(4) กำหนด Verifier เพื่อใช้ในการรับข้อมูล VP จาก Holder พร้อมทั้งตรวจสอบความถูกต้องของข้อมูล ตลอดจนการรับ-ส่งข้อมูลกับ resolver ของ DID method หรือ resolver ของ สพธอ.
 
-(5) สร้าง http get เพื่อใช้ในการเข้าถึง Registry พร้อมกับส่งข้อมูลให้กับทาง DIF Universal Resolver
+(5) สร้าง http get เพื่อใช้ในการเข้าถึง Registry พร้อมกับส่งข้อมูลให้ resolver ของ DID method หรือ resolver ของ สพธอ.
 
 {/* pdf page 54 */}
 
@@ -63,9 +64,12 @@ description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
 | CHG-06 | เพิ่ม | เพิ่ม Key Management และ Key Rotation | ผู้ควบคุมกุญแจ MUST กำหนด lifecycle, cryptoperiod, overlap, emergency rotation, audit trail และการป้องกัน private key |
 | CHG-07 | เพิ่ม | เพิ่ม VC Revocation และ status checking โดยอ้าง IETF Token Status List | Verifier MUST ตรวจ credential status ตาม policy และ MUST กำหนดพฤติกรรมเมื่อข้อมูลสถานะหมดอายุหรือเข้าถึงไม่ได้ |
 | CHG-08 | เพิ่ม | เพิ่มบทนิยามใหม่ โดยคงความหมายของนิยามเดิมในเวอร์ชัน 1.1 | ผู้จัดทำ profile SHOULD ใช้คำตามบทนิยามเดียวกันเพื่อลดความคลาดเคลื่อนระหว่างเอกสารและระบบ |
-| CHG-09 | เพิ่ม | เพิ่มหลักการเผยแพร่ Trusted List แบบ signed object ผ่าน CDN และ local cache | Consumer MUST ตรวจลายมือชื่อ Trusted List และ `LoTE.ListAndSchemeInformation.NextUpdate` ก่อนใช้ cache [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| CHG-09 | เพิ่ม | เพิ่มหลักการเผยแพร่ Trusted List แบบ signed object ผ่าน CDN และ local cache | Consumer MUST ตรวจลายมือชื่อ Trusted List และ `LoTESequenceNumber` ก่อนใช้ cache [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | CHG-10 | เพิ่ม | เพิ่มข้อกำหนดด้าน privacy, selective disclosure และ verifier authorization | Wallet MUST แสดง purpose และ claims ที่ร้องขอแก่ผู้ใช้ก่อนให้ความยินยอม และ MUST ไม่ส่งข้อมูลแก่ Verifier ที่ไม่ผ่าน trust policy |
 | CHG-11 | เพิ่มหมายเหตุ | เพิ่มหมายเหตุปรับปรุงมาตรฐานใน [§5](05-standards-and-compliance.md) ให้ชี้ไปยัง SD-JWT VC (`dc+sd-jwt`), OID4VCI 1.0 Final และ OID4VP 1.0 Final (พร้อม DCQL) โดยไม่แก้ถ้อยคำตัวอย่างต้นฉบับ v1.1 | ผู้อ่านที่เปิด §5 โดยตรง MUST เห็นหมายเหตุระบุมาตรฐานปัจจุบันและลิงก์ไปยัง §8/§8.1/§8.2 ก่อนนำตัวอย่างในรายงานต้นฉบับไปใช้งานจริง |
+| CHG-12 | เปลี่ยน | กำหนดการ resolve DID เป็นสามแบบตาม DID method และให้ resolver ของ สพธอ. ให้บริการเฉพาะ public DID method ในระยะเริ่มต้น ถอดชื่อ ETDA Trust Gateway และกลไก API key ออก | ผู้ตรวจสอบ MUST resolve ตาม DID Core และ MUST ติดต่อผู้ให้บริการของ proprietary method; ผลจาก resolver ไม่ใช่หลักฐานความน่าเชื่อถือ |
+| CHG-13 | เพิ่ม | เพิ่มบทถาม-ตอบสำหรับผู้อ่านทั่วไป | ผู้อ่านใช้ [17-faq.md](17-faq.md) เป็นทางเข้าคำถามที่พบบ่อย แล้วตามลิงก์ไปยังบทที่ให้คำตอบ |
+| CHG-14 | เปลี่ยน | กำหนดข้อผูกพันฝั่งผู้เผยแพร่ Trusted List และปรับ §12.8 ให้แยกข้อบังคับออกจากข้อเสนอ พร้อมเลิกใช้ฟิลด์วันสิ้นสุดอายุของรายการ เพิ่มแผนภาพชั้น cache กับทิศทางการตัดสินใจเมื่อ refresh ไม่ได้ และกำหนด maximum staleness เป็น 1 ชั่วโมง | ผู้เผยแพร่ MUST ให้ `ETag` คงเดิมเมื่อไฟล์ไม่เปลี่ยน ตอบ 304 โดยไม่มี body และห้ามให้ cache เก็บคำตอบข้อผิดพลาด; ระบบที่ใช้ข้อมูล MUST ไม่ปฏิเสธรายการเพราะมีเขตข้อมูลที่ Thai profile ไม่ใช้ |
 
 ### ข.3 รายละเอียดตามหมวด
 
@@ -76,8 +80,8 @@ description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
 ข้อกำหนดสำหรับผู้ใช้ Trusted List มีอย่างน้อยดังนี้
 
 1. MUST ตรวจลายมือชื่อของ Trusted List และระบุตัว Trusted List signer ที่เชื่อถือได้
-2. MUST ตรวจสถานะระดับองค์กรและระดับ service
-3. MUST ตรวจ `LoTESequenceNumber`, `ListIssueDateTime` และ `NextUpdate` ใน `LoTE.ListAndSchemeInformation` พร้อมตรวจช่วงเวลาบริการตาม Thai profile ที่ประกาศใช้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
+2. MUST ตรวจว่าบริการอยู่ใน Trusted List
+3. MUST ตรวจ `LoTESequenceNumber` และ `ListIssueDateTime` ใน `LoTE.ListAndSchemeInformation` พร้อมตรวจช่วงเวลาบริการตาม Thai profile ที่ประกาศใช้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
 4. MUST ตรวจ role และ `allowed credential types` ก่อนเชื่อถือการออก VC
 5. MUST ปฏิเสธข้อมูลเมื่อ trust check ไม่ผ่าน ก่อนเรียก network service อื่นโดยไม่จำเป็น
 
@@ -109,7 +113,7 @@ description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
 - Private signing key MUST ได้รับการป้องกันตามระดับความเสี่ยง และการใช้กุญแจ MUST มี audit trail ที่ตรวจสอบย้อนหลังได้
 - Key rotation MUST รองรับ `kid`, overlap และ emergency revocation โดยไม่ทำให้การตรวจ VC ที่ออกก่อนหน้าผิดพลาดเกิน policy
 - Status mechanism MUST ป้องกัน replay ของข้อมูลสถานะเก่า และ Verifier MUST ตรวจ freshness ก่อนตัดสินใจ
-- การใช้ local cache MAY ทำได้ภายในอายุที่กำหนดเท่านั้น; policy MUST ระบุ fail-open หรือ fail-closed แยกตามระดับความเสี่ยง
+- การใช้ local cache MAY ทำได้ภายในอายุที่กำหนดเท่านั้น; policy MUST ระบุ fail-open หรือ fail-closed แยกตามระดับความเสี่ยง — รายงานฉบับนี้กำหนด fail-closed ตามข้อ 12.1.6
 
 #### ข.3.6 หมายเหตุปรับปรุงมาตรฐานใน §5 (MASA-169)
 
@@ -163,6 +167,9 @@ description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
 | CHG-09 | CDN/cache | [§9.3 และ §9.9](09-trust-model-3.md) | Signed-object security model [S08] | รวมแล้ว |
 | CHG-10 | Privacy/authorization | [§8](08-implementation-guidelines.md) | OID4VP [S04] | รวมแล้ว; ผ่าน QA gate อัตโนมัติ (traceability/RFC2119/mermaid/link/README/KNOWLEDGE.yaml) — ดู ข.4.1 |
 | CHG-11 | แทนที่เนื้อหา §5 ทั้งบทด้วยมาตรฐานเวอร์ชัน 2.0 | [§5](05-standards-and-compliance.md) | OID4VCI 1.0 Final [10], OID4VP 1.0 Final [11], SD-JWT VC [12] | รวมแล้ว (MASA-169 เพิ่มหมายเหตุ → MASA-170 แทนที่เต็มรูปแบบ → MASA-170 แก้ข้อความ W3C VC Data Model v1.1 ตกค้าง) — ดู ข.3.6, ข.3.7, ข.3.8 |
+| CHG-12 | ขอบเขตการ resolve DID | [§5](05-standards-and-compliance.md), [§8](08-implementation-guidelines.md) | W3C DID Core [S05], W3C DID method registry | รอเลขมติ |
+| CHG-13 | เพิ่มบทถาม-ตอบ | [17-faq.md](17-faq.md) และ [§2](02-definitions.md) | — | — |
+| CHG-14 | การเผยแพร่และ cache ของ Trusted List | [§12.1](12.1-trust-list-publication-profile.md), [§12](12-key-management-and-trustlist-deployment.md), [§9](09-trust-model-3.md) | [research/43](../research/43-trustlist-entity-inmemory-cache.md) | ยุบตาราง payload ที่ซ้ำระหว่าง §9 กับ §12.1; research/42 และเอกสารสถาปัตยกรรมยังอ้างฟิลด์ที่เลิกใช้ |
 
 #### ข.4.1 QA gate ล่าสุด
 
@@ -190,7 +197,7 @@ description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
 #### สมมติฐานและช่องว่าง
 
 - สมมติให้ สพธอ. เป็นผู้กำกับดูแลและลงลายมือชื่อ Trusted List; รูปแบบอำนาจตามกฎหมายและ operating model ต้องได้รับมติแยกต่างหาก
-- ค่า TTL, cryptoperiod, overlap, fail-open/fail-closed และ assurance mapping ยังต้องได้รับอนุมัติจากผู้มีอำนาจกำกับ
+- ค่า TTL, cryptoperiod, overlap และ assurance mapping ยังต้องได้รับอนุมัติจากผู้มีอำนาจกำกับ ส่วนนโยบายเมื่อดึงข้อมูลใหม่ไม่ได้กำหนดเป็น fail-closed แล้วตามข้อ 12.1.6
 - เนื้อหาจาก S2–S8 รวมเข้า canonical tree ครบแล้ว ณ วันที่ตรวจปรับปรุงนี้ (4 สิงหาคม 2569); ตาราง traceability ใน §ข.4 ปรับให้ตรงกับสถานะปัจจุบัน อย่างไรก็ตาม MASA-131 (QA Gate ก่อนเผยแพร่จริง) และ MASA-132 (Publish/build Docusaurus + เปิด MR) ยังอยู่ระหว่างดำเนินการ — เอกสารนี้จึงยังเป็นสถานะ **Draft for approval** จนกว่าทั้งสอง milestone จะปิด
 
 ### ข.6 แนวทางย้ายจากเวอร์ชัน 1.1
@@ -216,5 +223,19 @@ description: "15. ภาคผนวก — Thai VC ARF 2.0 DRAFT 0"
 
 ---
 */}
+
+## ค. กฎการอ้างอิงและการจำแนกข้อความ
+
+บทที่ 11 ถึง 14 ใช้กฎการอ้างอิงและป้ายจำแนกข้อความชุดเดียวกัน จึงกำหนดไว้ที่เดียวที่นี่ แทนการพิมพ์ซ้ำในทุกบท
+
+**กฎการอ้างอิง:** ข้อกำหนดทุกข้อ **MUST** สืบย้อนไปยังไฟล์ภายใต้ `th/architecture/` มาตรฐานภายนอกอ้างผ่านไฟล์สถาปัตยกรรมที่ระบุมาตรฐานนั้นไว้แล้ว บท **MUST NOT** สร้างข้อกำหนดใหม่ที่ไม่มีฐานในเอกสารสถาปัตยกรรม
+
+| ป้าย | ความหมาย |
+|------|----------|
+| **[ข้อเท็จจริง]** | ข้อความที่ปรากฏในเอกสารสถาปัตยกรรมโดยตรง พร้อมเลขอ้างอิง |
+| **[ข้อวิเคราะห์]** | การประมวลข้อเท็จจริงหลายแหล่งเข้าเป็นข้อกำหนดเชิงกำกับดูแล |
+| **[ช่องว่าง]** | ประเด็นที่เอกสารสถาปัตยกรรมยังขัดกันเองหรือยังไม่กำหนด ต้องมีมติก่อนบังคับใช้ |
+
+คำ **MUST / MUST NOT / SHOULD / MAY** ใช้ตามความหมายเชิงข้อกำหนด: ต้อง / ห้าม / ควร / อาจ
 
 **การนำทาง:** [⬅️ บทที่ 14 — ความมั่นคงปลอดภัย: Threat Model และ Conformance](14-security-threat-model-and-conformance.md) · [⬆️ สารบัญ ARF](README.md) · [บทที่ 16 — บรรณานุกรม ➡️](16-bibliography.md)

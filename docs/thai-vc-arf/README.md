@@ -1,11 +1,12 @@
 ---
-description: "Thai VC ARF — 2.0 DRAFT 0 — Thai VC ARF 2.0 DRAFT 0"
+description: "Thai VC ARF — 2.0 DRAFT 1 — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: -1
 ---
 
-# Thai VC ARF — กรอบแนวทางการทำงานร่วมกันของเอกสารรับรองดิจิทัล (เวอร์ชัน 1.1 + ส่วนขยาย 2.1)
+# Thai VC ARF — กรอบแนวทางการทำงานร่วมกันของเอกสารรับรองดิจิทัล (เวอร์ชัน 1.1 + ส่วนขยาย 2.0 ฉบับร่าง 1)
 
 {/* METADATA (agent-only — not rendered to readers)
-> **สถานะ:** 📄 Reference — บทที่ 1–8 แปลงจาก PDF ต้นฉบับ Thai VC ARF v1.1 ของ สพธอ. (มกราคม 2568) และเพิ่มส่วนขยายเวอร์ชัน 2.1 (บทที่ 6.5, 8.1, 8.2, 9–16)
+> **สถานะ:** 📄 Reference — บทที่ 1–8 แปลงจาก PDF ต้นฉบับ Thai VC ARF v1.1 ของ สพธอ. (มกราคม 2568) และเพิ่มส่วนขยายเวอร์ชัน 2.0 ฉบับร่าง 1 (บทที่ 6.5, 8.1, 8.2, 9–16)
 > **แหล่งข้อมูล:** [Thai-VC-ARF-v1-1.pdf](https://www.etda.or.th/getattachment/Our-Service/Digital-Trusted-services-Infrastructure/VC-and-Digital-Document-Wallet/Information/รายงานทางเทคนค-Thai-VC-ARF-v1-1.pdf) — รายงานทางเทคนิค: THAI VC ARCHITECTURE AND REFERENCE FRAMEWORK เวอร์ชัน 1.1 (มกราคม 2568)
 > **เอกสารที่เกี่ยวข้อง:** [research/34 — Trusted List domestic + cross-border](../research/34-trustlist-domestic-and-crossborder.md) · [governance/VCGF](../governance/README.md)
 */}
@@ -17,7 +18,7 @@ description: "Thai VC ARF — 2.0 DRAFT 0 — Thai VC ARF 2.0 DRAFT 0"
 นี่คือ **รายงานทางเทคนิค Thai VC ARF** ของ สพธอ. ในรูปแบบ Markdown เพื่อใช้บนเว็บ (Docusaurus)
 เอกสารต้นฉบับวางกรอบการทำงานร่วมกัน (interoperability) ของเอกสารรับรองดิจิทัล (VC) และเอกสารสำแดงดิจิทัล (VP) สำหรับประเทศไทย
 
-บทที่ 1–8 มีฐานจากต้นฉบับเวอร์ชัน 1.1 แต่มีการปรับปรุงมาตรฐานและแนวทางปฏิบัติในบางบท; บทที่ 6.5 และบทที่ 9–14 เป็นส่วนขยายหลักเวอร์ชัน 2.0 (บทที่ 6.5 เป็นบทเกริ่นนำเรื่องกลไกการสร้างความน่าเชื่อถือ แทรกก่อนบทที่ 7) ส่วนบทที่ 8.1, 8.2 และ 12.1 เพิ่มเติมในเวอร์ชัน 2.1 และบทที่ 8 มี revision ย่อยตาม metadata ของบท แต่ละบทอยู่คนละไฟล์เพื่อให้อ่านง่ายบนเว็บ
+บทที่ 1–8 มีฐานจากต้นฉบับเวอร์ชัน 1.1 แต่มีการปรับปรุงมาตรฐานและแนวทางปฏิบัติในบางบท; บทที่ 6.5 และบทที่ 9–14 เป็นส่วนขยายหลักที่เริ่มในเวอร์ชัน 2.0 (บทที่ 6.5 เป็นบทเกริ่นนำเรื่องกลไกการสร้างความน่าเชื่อถือ แทรกก่อนบทที่ 7) ส่วนบทที่ 8.1, 8.2 และ 12.1 เพิ่มเติมในรอบเดียวกัน ฉบับปัจจุบันคือ 2.0 ฉบับร่าง 1 และบทที่ 8 มี revision ย่อยตาม metadata ของบท แต่ละบทอยู่คนละไฟล์เพื่อให้อ่านง่ายบนเว็บ
 
 {/* METADATA (agent-only — not rendered to readers)
 ## หมายเหตุการแปลงและการปรับปรุง
@@ -27,10 +28,23 @@ description: "Thai VC ARF — 2.0 DRAFT 0 — Thai VC ARF 2.0 DRAFT 0"
 - รูปทั้ง 28 รูปถูกดึงออกมาเป็นไฟล์ภาพและฝังไว้ในตำแหน่งเดิม (ดูโฟลเดอร์ `images/`)
 - คอมเมนต์ `<!-- pdf page N -->` บอกเลขหน้าของ PDF ต้นฉบับไว้เพื่ออ้างอิง
 - **บทที่ 6.5 (กลไกการสร้างความน่าเชื่อถือ — Trusted List และแบบจำลองความน่าเชื่อถือ 3 รูปแบบ) และบทที่ 9–14 (Trust Model 3, WUA, Cryptographic Suites, Key Management/Trusted List Deployment, VC Status/Revocation และ Threat Model/Conformance) เป็นส่วนขยายเวอร์ชัน 2.0** ที่คณะทำงานเพิ่ม ไม่ได้อยู่ใน PDF ต้นฉบับ
-- **บทที่ 8.1 (OID4VCI Full Flow) และ 8.2 (OID4VP Full Flow) เป็นส่วนขยายเวอร์ชัน 2.1** ที่เพิ่มเติมภายใต้ MASA-158 — รวมแผนภาพฉบับสมบูรณ์ รายละเอียด field-by-field และนโยบาย DPoP จาก trust-guide เข้าเป็นภาคผนวกของบทที่ 8
+- **บทที่ 8.1 (OID4VCI Full Flow) และ 8.2 (OID4VP Full Flow) เป็นส่วนขยายของรอบ 2.0 ฉบับร่าง 1** ที่เพิ่มเติมภายใต้ MASA-158 — รวมแผนภาพฉบับสมบูรณ์ รายละเอียด field-by-field และนโยบาย DPoP จาก trust-guide เข้าเป็นภาคผนวกของบทที่ 8
 - **บันทึกการเปลี่ยนแปลงจากเวอร์ชัน 1.1 เป็น 2.0** อยู่ใน [ภาคผนวก ข](15-appendix.md)
 - **[บทที่ 0](00-minimal-interoperability-reference.md) เป็นบทสรุปหนึ่งหน้าที่จัดทำเพิ่มเติม** เพื่อให้ระบบของคู่ภาคีใช้ตรวจสอบความสอดคล้องกัน (interoperability) โดยรายละเอียดโครงสร้าง Trusted List ให้ยึด [research/42](../research/42-trusted-list-lote-jwt-format.md) และบทที่ 0 เป็นแหล่งข้อมูลอ้างอิงหลัก
 */}
+
+## เริ่มจากคำถาม
+
+ถ้ายังไม่รู้ว่าจะเริ่มที่บทไหน ให้เริ่มจากคำถามที่ตรงกับงานของท่าน คำตอบสั้นของแต่ละข้ออยู่ที่ [บทที่ 17](17-faq.md)
+
+| คำถาม | ไปที่ |
+|---|---|
+| Thai profile คืออะไร | [2.43](02-definitions.md#นิยามเพิ่มเติมสำหรับเวอร์ชัน-20) |
+| DID resolver ใช้ตัวไหน | [§5.5](05-standards-and-compliance.md#55-การ-resolve-did) และ [§8.5](08-implementation-guidelines.md#85-การ-resolve-did-did-resolution-3-กรณี) |
+| Trusted List มีกี่ไฟล์ ใครตรวจอะไร LoTE คืออะไร | [§12.1.2](12.1-trust-list-publication-profile.md#1212-ประเภทและจำนวนไฟล์) |
+| Credential Status แยกได้ไหม เพิกถอนอย่างไร | [§13.2](13-vc-status-and-revocation.md#132-รูปแบบที่เลือกใช้) |
+| กุญแจแต่ละบทบาทเก็บแบบใด | [§12.2](12-key-management-and-trustlist-deployment.md#122-ข้อกำหนดการเก็บกุญแจ) |
+| แจ้งเหตุฉุกเฉินทางไหน | [§12.6](12-key-management-and-trustlist-deployment.md#126-การจัดการกุญแจที่ถูก-compromise) |
 
 ## สารบัญ
 
@@ -48,6 +62,7 @@ description: "Thai VC ARF — 2.0 DRAFT 0 — Thai VC ARF 2.0 DRAFT 0"
 | 8 | Implementation Guidelines (OID4VCI / OID4VP) | [08-implementation-guidelines.md](08-implementation-guidelines.md) |
 | 8.1 | **ภาคผนวกบทที่ 8 — Full Flow OID4VCI ทางเทคนิคโดยละเอียด** (ส่วนขยาย v2.1 — MASA-158, STEP 1.5 → 2.5) | [08.1-issuance-full-flow-detail.md](08.1-issuance-full-flow-detail.md) |
 | 8.2 | **ภาคผนวกบทที่ 8 — Full Flow OID4VP ทางเทคนิคโดยละเอียด** (ส่วนขยาย v2.1 — MASA-158) | [08.2-oid4vp-full-flow-detail.md](08.2-oid4vp-full-flow-detail.md) |
+| 8.3 | **ภาคผนวกบทที่ 8 — Proximity Full Flow (mdoc ผ่าน NFC และ Bluetooth LE)** (ส่วนขยาย — เส้นทาง proximity) | [08.3-proximity-full-flow-detail.md](08.3-proximity-full-flow-detail.md) |
 | 9 | **Trust Model 3 — Trusted List + DID** (ส่วนขยาย v2.0) | [09-trust-model-3.md](09-trust-model-3.md) |
 | 10 | **Wallet Unit Attestation (WUA)** (ส่วนขยาย v2.0) | [10-wallet-unit-attestation.md](10-wallet-unit-attestation.md) |
 | 11 | **Cryptographic Suites** (ส่วนขยาย v2.0) | [11-cryptographic-suites.md](11-cryptographic-suites.md) |
@@ -57,6 +72,7 @@ description: "Thai VC ARF — 2.0 DRAFT 0 — Thai VC ARF 2.0 DRAFT 0"
 | 14 | **ความมั่นคงปลอดภัย: Threat Model และรายการตรวจ Conformance** (ส่วนขยาย v2.0) | [14-security-threat-model-and-conformance.md](14-security-threat-model-and-conformance.md) |
 | 15 | ภาคผนวก (ก. การทำงานร่วมกัน · ข. บันทึกการเปลี่ยนแปลง v1.1 → v2.0) | [15-appendix.md](15-appendix.md) |
 | 16 | บรรณานุกรม | [16-bibliography.md](16-bibliography.md) |
+| 17 | **คำถามที่พบบ่อยและทะเบียนคำตอบ** — คำถามที่ผู้อ่านถามบ่อยและข้อหารือจากหน่วยงานในตารางเดียว | [17-faq.md](17-faq.md) |
 
 ---
 

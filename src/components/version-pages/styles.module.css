@@ -1,0 +1,221 @@
+/* Shared chrome for the version history and delta pages. All sizes in rem so a
+   reader's font-size preference scales the tables too. */
+
+.pageHeader {
+  margin-block-end: 1.5rem;
+}
+
+.eyebrow {
+  margin-block-end: 0.25rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.lede {
+  max-inline-size: 68ch;
+  color: var(--ifm-color-emphasis-800);
+  text-wrap: pretty;
+}
+
+.pairHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-block: 0 1.25rem;
+  font-size: 1rem;
+}
+
+.pairSide {
+  overflow-wrap: break-word;
+}
+
+.pairArrow {
+  color: var(--ifm-color-emphasis-600);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin-block: 0 1.75rem;
+  padding: 0;
+}
+
+.stat {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-background-surface-color);
+}
+
+.stat dt {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.8rem;
+}
+
+.stat dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scroll region: focusable so keyboards can pan a wide table. */
+.tableRegion {
+  container-type: inline-size;
+  overflow-x: auto;
+  scroll-padding-block-start: 3rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+}
+
+.tableRegion:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.responsiveTable {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.responsiveTable thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  padding: 0.6rem 0.75rem;
+  border-block-end: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-surface-color);
+  font-size: 0.85rem;
+  text-align: start;
+  white-space: nowrap;
+}
+
+.responsiveTable tbody th,
+.responsiveTable tbody td {
+  padding: 0.6rem 0.75rem;
+  border-block-end: 1px solid var(--ifm-color-emphasis-200);
+  overflow-wrap: break-word;
+  text-align: start;
+  vertical-align: top;
+}
+
+.responsiveTable tbody tr:last-child th,
+.responsiveTable tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+.responsiveTable tbody th {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.numeric {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+@container (width < 600px) {
+  .responsiveTable thead {
+    display: none;
+  }
+
+  .responsiveTable tbody tr {
+    display: block;
+    margin-block-end: 0.75rem;
+    border: 1px solid var(--ifm-color-emphasis-200);
+    border-radius: var(--ifm-global-radius);
+  }
+
+  .responsiveTable tbody tr:last-child {
+    margin-block-end: 0;
+  }
+
+  .responsiveTable tbody th,
+  .responsiveTable tbody td {
+    display: grid;
+    grid-template-columns: minmax(5.5rem, 38%) 1fr;
+    gap: 0.5rem;
+    border-block-end: 1px dashed var(--ifm-color-emphasis-200);
+  }
+
+  .responsiveTable tbody th::before,
+  .responsiveTable tbody td::before {
+    content: var(--label, '');
+    color: var(--ifm-color-emphasis-700);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.chipWip {
+  border-color: var(--ifm-color-warning);
+  background: var(--ifm-color-warning-contrast-background);
+  color: var(--ifm-color-warning-contrast-foreground);
+}
+
+.chipCurrent {
+  border-color: var(--ifm-color-success);
+  background: var(--ifm-color-success-contrast-background);
+  color: var(--ifm-color-success-contrast-foreground);
+}
+
+.chipReplaced {
+  border-color: var(--ifm-color-emphasis-300);
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-800);
+}
+
+.chipExternal {
+  border-color: var(--ifm-color-primary-light);
+  background: var(--ifm-color-primary-contrast-background);
+  color: var(--ifm-color-primary-contrast-foreground);
+}
+
+.summaryList {
+  margin: 0;
+  padding-inline-start: 1.1rem;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.disclosure {
+  margin-block: 1.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+}
+
+.disclosure > summary {
+  cursor: pointer;
+  color: var(--ifm-color-emphasis-800);
+  font-weight: 600;
+}
+
+.disclosureBody {
+  margin-block-start: 0.75rem;
+  text-wrap: pretty;
+}
+
+.muted {
+  color: var(--ifm-color-emphasis-700);
+}

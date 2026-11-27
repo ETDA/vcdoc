@@ -1,5 +1,6 @@
 ---
-description: "5. มาตรฐานและข้อปฏิบัติสำหรับเอกสารรับรองดิจิทัลและเอกสารสำแดงดิจิทัล (Standards and Compliance for Verifiable Credentials and Presentations) — Thai VC ARF 2.0 DRAFT 0"
+description: "5. มาตรฐานและข้อปฏิบัติสำหรับเอกสารรับรองดิจิทัลและเอกสารสำแดงดิจิทัล (Standards and Compliance for Verifiable Credentials and Presentations) — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 5
 ---
 
 # 5. มาตรฐานและข้อปฏิบัติสำหรับเอกสารรับรองดิจิทัลและเอกสารสำแดงดิจิทัล (Standards and Compliance for Verifiable Credentials and Presentations)
@@ -24,7 +25,13 @@ description: "5. มาตรฐานและข้อปฏิบัติส
 - เอกสารรับรองดิจิทัล (verifiable credential: VC)
 - เอกสารสำแดงดิจิทัล (verifiable presentation: VP)
 
-ระบบต้องรองรับ W3C Verifiable Credentials Data Model v1.1 (W3C VCDM) [5] สำหรับเอกสารเดิม และ IETF SD-JWT Verifiable Credential (`dc+sd-jwt`) [12] ซึ่งเพิ่มใน ARF ฉบับนี้ สำหรับเอกสารใหม่ การออกและการสำแดงผ่านโพรโทคอล **OID4VCI 1.0 Final** [10] และ **OID4VP 1.0 Final พร้อม DCQL** [11] ใช้ `dc+sd-jwt` เป็นรูปแบบที่แนะนำ รายละเอียดทางเทคนิคระดับ field-by-field พร้อมตัวอย่าง SD-JWT VC อยู่ที่ [§8.1 — OID4VCI Full Flow](08.1-issuance-full-flow-detail.md) และ [§8.2 — OID4VP Full Flow](08.2-oid4vp-full-flow-detail.md)
+รายงานฉบับนี้ไม่บังคับรูปแบบเอกสารใด ระบบเลือกได้ตามความเหมาะสมของธุรกรรม แต่เพื่อให้เอนทิตีจากหลายฝ่ายทำงานข้ามระบบกันได้ด้วยรูปแบบเอกสารเดียวกัน สพธอ. แนะนำให้รองรับรูปแบบเอกสารรับรองดังนี้
+
+1. W3C VCDM v1.1 และ v2.0 สำหรับเอกสารเดิม
+2. IETF SD-JWT Verifiable Credential (`dc+sd-jwt`) [12] สำหรับเอกสารใหม่
+3. ISO/IEC 18013-5 `mdoc`
+
+การออกและการสำแดงผ่านโพรโทคอล **OID4VCI 1.0 Final** [10] และ **OID4VP 1.0 Final พร้อม DCQL** [11] ใช้ `dc+sd-jwt` เป็นรูปแบบที่แนะนำ รายละเอียดทางเทคนิคระดับ field-by-field พร้อมตัวอย่าง SD-JWT VC อยู่ที่ [§8.1 — OID4VCI Full Flow](08.1-issuance-full-flow-detail.md) และ [§8.2 — OID4VP Full Flow](08.2-oid4vp-full-flow-detail.md)
 
 ## 5.0 โครงของบทนี้
 
@@ -35,7 +42,7 @@ description: "5. มาตรฐานและข้อปฏิบัติส
 | โครงสร้าง VC/VP | §5.1–§5.2 | การรองรับ W3C VCDM v1.1 สำหรับเอกสารเดิม และ **SD-JWT VC (`dc+sd-jwt`)** ที่เพิ่มใน ARF ฉบับนี้ พร้อมตัวอย่าง SD-JWT VC |
 | การออกเอกสาร (OID4VCI) | §5.3 | ขั้นตอนการออก VC ด้วยโพรโทคอล **OID4VCI 1.0 Final** [10] |
 | การสำแดงเอกสาร (OID4VP) | §5.4 | ขั้นตอนการสำแดงและตรวจสอบ VP ด้วยโพรโทคอล **OID4VP 1.0 Final พร้อม DCQL** [11] |
-| Universal Resolver | §5.5 | การใช้ DIF Universal Resolver เพื่อการทำงานร่วมกันระหว่างระบบนิเวศ |
+| การ resolve DID | §5.5 | การ resolve DID ตาม DID Core และ resolver ของ สพธอ. สำหรับ public DID method |
 | บทบาทของผู้เกี่ยวข้อง | §5.6 | บทบาทของผู้ออกเอกสาร ผู้ถือเอกสาร และผู้ตรวจสอบเอกสาร |
 
 ## 5.1 เอกสารรับรองดิจิทัล (verifiable credential: VC)
@@ -130,9 +137,9 @@ Disclosure (ส่วนที่ 2 ของ SD-JWT VC — ตัวอย่�
 
 1. ตรวจสอบความถูกต้องของโครงสร้างเอกสารสำแดงดิจิทัล โดยแยกส่วนด้วยสัญลักษณ์ "~" แล้วตรวจว่าประกอบด้วย Issuer-signed JWT, Disclosures และ Key Binding JWT ครบถ้วนตามรูปแบบ SD-JWT
 2. ตรวจสอบ Key Binding JWT (KB-JWT) โดยตรวจลายมือชื่อด้วยกุญแจสาธารณะของผู้ถือเอกสาร (`cnf.jwk`) ที่ปรากฏใน Issuer-signed JWT และตรวจว่าค่า `sd_hash` ใน KB-JWT ตรงกับค่าแฮชที่คำนวณจากส่วน Issuer-signed JWT และ Disclosures ที่ส่งมาจริง เพื่อยืนยันว่าผู้ส่งเป็นผู้ครอบครองคู่กุญแจของเอกสารจริง
-3. ตรวจสอบผู้ออกเอกสาร (Issuer) เป็น Legal Entity หรือไม่ โดยการร้องขอ DID Document จาก Registry ผ่าน DIF Universal Resolver
+3. ตรวจสอบผู้ออกเอกสาร (Issuer) เป็น Legal Entity หรือไม่ โดยการร้องขอ DID Document จาก resolver ของ DID method นั้น หรือจาก resolver ของ สพธอ. ในกรณีที่เป็น public DID method
 4. ตรวจสอบ Disclosure แต่ละรายการที่เปิดเผยมาว่าเมื่อคำนวณแฮชแล้วตรงกับค่าที่ปรากฏในอาร์เรย์ `_sd` ของ Issuer-signed JWT หรือไม่ เพื่อยืนยันว่าข้อมูลที่เปิดเผยไม่ถูกแก้ไข
-5. ตรวจสอบความถูกต้องของ Issuer-signed JWT โดยตรวจลายมือชื่อดิจิทัลด้วยกุญแจสาธารณะจาก Trusted List ที่เกี่ยวข้อง หรือ DID Document ที่ผูกกับรายการใน Trusted List แล้ว และตรวจสถานะกับขอบเขตสิทธิ์ของ Issuer ใน Trusted List ตาม [ข้อกำหนดการเผยแพร่ Trusted List](12.1-trust-list-publication-profile.md)
+5. ตรวจสอบความถูกต้องของ Issuer-signed JWT โดยตรวจลายมือชื่อดิจิทัลด้วยกุญแจสาธารณะจาก DID Document ที่ผูกกับรายการใน Trusted List และ **ต้อง** ตรงกับ `ServiceDigitalIdentity` ของบริการ Issuer ใน Trusted List แล้ว และตรวจสถานะกับขอบเขตสิทธิ์ของ Issuer ใน Trusted List ตาม [ข้อกำหนดการเผยแพร่ Trusted List](12.1-trust-list-publication-profile.md)
 
 เมื่อทำการตรวจสอบทั้ง 5 ขั้นตอนแล้วถูกต้องทั้งหมด จึงจะยอมรับว่า VP ที่ได้รับมาถูกสร้างออกมาอย่างถูกต้อง จึงจะนำไปใช้งานหรือดำเนินการอื่นต่อไปได้ รายละเอียดขั้นตอนการตรวจสอบเต็มรูปแบบ (รวม Trust Checkpoint ของ ETDA Trust Model) อยู่ที่ [§8.2 — OID4VP Full Flow](08.2-oid4vp-full-flow-detail.md)
 
@@ -594,7 +601,7 @@ Cache-Control: no-store
 - ผู้ตรวจสอบเอกสารทำการส่งข้อมูล DID ID ไปตรวจสอบข้อมูลใน Registry
   - ข้อมูล DID => “did:tbsi:zv8fVB1i6S7MLMZX8wd3Ayo”
 - การ Resolve ข้อมูลใน Registry มี 2 รูปแบบ
-  - ทำการ Request ผ่าน DIF Universal Resolver
+  - ทำการ Request ผ่าน resolver ของ DID method นั้น หรือผ่าน resolver ของ สพธอ. ในกรณีที่เป็น public DID method
   - ทำการ Request ไปยัง Registry โดยตรง ซึ่งในรายงานฉบับนี้จะใช้วิธี “http get”
 - ข้อมูลที่ได้จากการทำ Resolve คือข้อมูล DID Doc ของผู้ออกเอกสาร และส่งข้อมูล DID Doc กลับมาให้ผู้ตรวจสอบเอกสาร
 
@@ -647,17 +654,22 @@ GET 'http://example.verifier_url/GetDIDDoc?' Id=did:tbsi:zv8fVB1i6S7MLMZX8wd3Ayo
 | Message | Required | String | คำอธิบาย status |
 | Data | Required | JSON | ข้อมูล DID DOC |
 
-## 5.5 Universal Resolver
+## 5.5 การ resolve DID
 
-เพื่อให้ทุกระบบนิเวศ (ecosystem) ทำงานร่วมกันได้ จำเป็นต้องมีตัวกลางสำหรับรวบรวมข้อมูลที่ใช้ตรวจสอบและยืนยันความถูกต้องของข้อมูลสำคัญในรูปแบบมาตรฐานเดียวกัน จึงเกิดแนวคิดการใช้ DIF Universal Resolver
+DID Core กำหนดกระบวนการ resolve ไว้ที่ DID method แต่ละราย ไม่ได้กำหนดตัวกลางที่ทุกฝ่ายต้องใช้ร่วมกัน ระบบที่ต้องตรวจ VC จึง resolve ตามวิธีของ DID ที่พบ แบ่งได้สามแบบ
 
-DIF Universal Resolver เป็นจุดเชื่อมต่อไปยังระบบนิเวศ (ecosystem) แต่ละแห่ง เพื่อให้การทำงานร่วมกัน (interoperability) เกิดขึ้นได้ แต่ละระบบนิเวศต้องลงทะเบียนใช้งาน DIF Universal Resolver โดยข้อมูลอยู่ในรูปแบบไฟล์อิเล็กทรอนิกส์มาตรฐานเดียวกันทั้งระบบนิเวศ และเมื่อต้องการตรวจสอบความถูกต้องของข้อมูลจากระบบนิเวศใด ก็สามารถสอบถามผ่าน DIF Universal Resolver ได้ทันที ทำให้แต่ละขั้นตอนดำเนินการได้รวดเร็วและเป็นมาตรฐานเดียวกัน
+1. **ฝังในตัว DID** คือ `did:key` และ `did:jwk` แยกกุญแจสาธารณะจากสายอักขระได้ทันที ไม่ต้องใช้เครือข่าย
+2. **DID method สาธารณะ** คือ method ที่มีข้อกำหนดเผยแพร่และจดทะเบียนใน W3C DID method registry เช่น `did:web` ผู้อ่านอาจเรียกแหล่งของ method ตรง รัน resolver เอง หรือใช้ resolver ที่ สพธอ. เปิดให้บริการในระยะเริ่มต้นที่ `https://resolver.etda.or.th`
+3. **proprietary DID method** คือ method ที่ไม่เข้าเงื่อนไขข้อ 2 เช่น `did:ndid` มีเพียงผู้ให้บริการของ method นั้นที่ resolve ได้ ผู้อ่านต้องติดต่อผู้ให้บริการเอง
 
+resolver ของ สพธอ. ในระยะเริ่มต้นมีไว้ช่วยหน่วยงานที่ยังไม่ได้ติดตั้ง resolver เอง ให้บริการเฉพาะ DID method สาธารณะ ผลจาก resolver ยังต้องตรวจกับ Trusted List ตาม §9 การใช้บริการนี้เป็นทางเลือก ผู้อ่านต้อง resolve เองได้หากบริการไม่พร้อม
+
+การเลือกว่าจะ resolve ด้วยวิธีใดในแต่ละกรณี ดูกรณีการ resolve สามกรณีใน [§8.5](08-implementation-guidelines.md#85-การ-resolve-did-did-resolution-3-กรณี)
 ## 5.6 บทบาทและกระบวนการที่เกี่ยวข้องภายใต้ VC Ecosystem
 
 รายงานฉบับนี้สรุปบทบาทและกระบวนการที่เกี่ยวข้องภายใต้ VC Ecosystem ดังรูปที่ 17 โดยมีรายละเอียดของแต่ละบทบาทดังนี้
 
-![บทบาทของผู้ที่เกี่ยวข้องกับการใช้งานเอกสารรับรองดิจิทัล](images/p41-0.png)
+![บทบาทของผู้ที่เกี่ยวข้องกับการใช้งานเอกสารรับรองดิจิทัล](images/p10-0.png)
 
 **รูปที่ 17 บทบาทของผู้ที่เกี่ยวข้องกับการใช้งานเอกสารรับรองดิจิทัล**
 
@@ -690,7 +702,7 @@ DIF Universal Resolver เป็นจุดเชื่อมต่อไปย
 2. สร้างและแสดง QR Code เพื่อให้ Holder เข้ามาร้องขอการส่งข้อมูล
 3. ออก Token เพื่อใช้ในการยืนยันการรับ-ส่ง VP
 4. รับข้อมูล VP จาก Holder สำเร็จ
-5. ดึงข้อมูล (Resolve) จาก Registry จะดำเนินการผ่านขั้นตอน Decentralized Identity Foundation Universal Resolver (DIF Universal Resolver) เพื่อนำมาตรวจสอบความถูกต้องของผู้ออกข้อมูล VC
+5. ดึงข้อมูล (Resolve) จาก Registry ผ่าน resolver ของ DID method นั้น หรือผ่าน resolver ของ สพธอ. ในกรณีที่เป็น public DID method เพื่อนำมาตรวจสอบความถูกต้องของผู้ออกข้อมูล VC
 6. ดำเนินการตรวจสอบความถูกต้องของข้อมูล VP ที่ได้รับมา โดยตรวจสอบรายละเอียด ดังนี้
     - ถอดโครงสร้างเอกสารสำแดงดิจิทัล (Decode the VP) เป็นการแยกส่วนตามสัญลักษณ์ "~" ต้องประกอบด้วย
         - Issuer-signed JWT (คำอธิบายข้อมูลของ VC และข้อความยืนยันที่ถูกแฮชไว้ใน `_sd`)

@@ -1,5 +1,6 @@
 ---
-description: "8. Implementation Guidelines — OID4VCI / OID4VP และแนวทางการนำไปใช้งาน — Thai VC ARF 2.0 DRAFT 0"
+description: "8. Implementation Guidelines — OID4VCI / OID4VP และแนวทางการนำไปใช้งาน — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 8
 ---
 
 # 8. Implementation Guidelines — OID4VCI / OID4VP และแนวทางการนำไปใช้งาน
@@ -45,20 +46,23 @@ description: "8. Implementation Guidelines — OID4VCI / OID4VP และแน�
 |--------|---------------------|---------------|
 | ภาษาในการพัฒนา | MUST เป็น High-Level Language | — |
 | อัลกอริทึมลายมือชื่ออิเล็กทรอนิกส์ | MUST รองรับการสร้างและตรวจลายมือชื่อด้วย EdDSA (Ed25519) และ ES256 (ECDSA P-256/SHA-256) | [REF-EdDSA] [REF-ES256] |
-| เค้าร่างเอกสารรับรอง | MUST รองรับ W3C Verifiable Credentials Data Model v1.1 สำหรับเอกสารเดิม และ MUST รองรับ IETF SD-JWT Verifiable Credential (`dc+sd-jwt`) ที่เพิ่มใน ARF ฉบับนี้; การออกเอกสารใหม่ SHOULD ใช้ `dc+sd-jwt` | [REF-W3C-VCDM] [REF-SDJWT] |
+| เค้าร่างเอกสารรับรอง | SHOULD รองรับ W3C Verifiable Credentials Data Model v1.1 และ v2.0, IETF SD-JWT Verifiable Credential (`dc+sd-jwt`) และ `mdoc` ตาม ISO/IEC 18013-5 เพื่อการทำงานข้ามระบบ; ระบบ MAY ใช้รูปแบบอื่นได้ และการออกเอกสารใหม่ SHOULD ใช้ `dc+sd-jwt` | [REF-W3C-VCDM] [REF-SDJWT] |
 | โปรโตคอลออกเอกสารรับรอง | MUST ใช้ OpenID for Verifiable Credential Issuance (OID4VCI) 1.0 Final | [REF-OID4VCI] |
 | โปรโตคอลแสดงเอกสาร | MUST ใช้ OpenID for Verifiable Presentations (OID4VP) 1.0 Final พร้อม Digital Credentials Query Language (DCQL) | [REF-OID4VP] |
 | การยกเลิก/ระงับเอกสาร | MUST ใช้ IETF Token Status List (`statuslist+jwt`) เป็นกลไก revocation | [REF-TSL] |
 | กระบวนการ Authorization Code | MUST ใช้ pre-authorized code flow ตาม OID4VCI §4.1 ยกเว้นกรณีผู้ถือ (Holder) ร้องขอ authorization แบบ explicit code | [REF-OID4VCI] |
-| การ resolve DID (DID Resolution) | MUST รองรับ DIF Universal Resolver เป็นตัวกลางมาตรฐาน และ SHOULD รองรับ `did:web` และ `did:key` โดยตรงเพื่อลดการพึ่งพาส่วนกลาง | [REF-UR][REF-DID-CORE] |
+| `tx_code` และช่องทางส่ง offer | ไม่กำหนด จึงไม่มีข้อห้ามและไม่มีข้อบังคับ การใช้ `tx_code` ขึ้นกับ use case และระดับ IAL ที่ต้องการ ช่องทางส่งรหัส เช่น SMS อีเมล หรือ push ขึ้นกับ use case เช่นกัน แต่ **MUST** เป็นช่องทางที่แยกจากช่องทางที่ส่ง offer | — |
+| การ resolve DID (DID Resolution) | MUST resolve ตาม DID Core ผ่าน resolver ที่เข้าถึงได้สำหรับ DID method สาธารณะ และ MUST ติดต่อผู้ให้บริการของ method สำหรับ proprietary DID method | ผลจาก resolver ไม่ใช่หลักฐานความน่าเชื่อถือ ต้องตรวจกับ Trusted List ทุกครั้ง | [REF-UR][REF-DID-CORE] |
 | ลายมือชื่อในคำขอ (Request Object) | MUST ใช้ client identifier scheme ที่ OID4VP §5.9 ระบุ เช่น `x509_san_dns:`, `x509_hash:`, `decentralized_identifier:`, `verifier_attestation`, `openid_federation` | [REF-OID4VP] |
+
+`mdoc` ตาม ISO/IEC 18013-5 รองรับในระดับรูปแบบเอกสาร แต่ฉบับนี้ยังไม่กำหนดผู้ออกใบรับรอง IACA และยังไม่กำหนดแหล่งที่ใช้ตรวจใบรับรองนั้น การใช้งาน `mdoc` ระหว่างประเทศจึงยังไม่ครบวงจร
 
 {/* METADATA (agent-only — not rendered to readers)
 > **ฐานจากเวอร์ชัน 1.1 และการปรับปรุงในเวอร์ชัน 2.0:** เวอร์ชัน 1.1 ใช้ W3C VCDM v1.1 และ JSON-LD สำหรับเอกสารเดิม รวมทั้ง OID4VC draft 13 กับ OID4VP draft 20 เวอร์ชัน 2.0 ยังคงรองรับ W3C VCDM v1.1 และเพิ่ม SD-JWT VC (`dc+sd-jwt`) สำหรับเอกสารใหม่ พร้อมใช้ OID4VCI 1.0 Final และ OID4VP 1.0 Final (พร้อม DCQL) โดยกำหนด EdDSA (Ed25519) เป็นอัลกอริทึมที่แนะนำ และกำหนดให้รองรับ ES256 เพิ่มเติมตามโปรไฟล์กุญแจในบทที่ 11; pre-authorized code flow ยังคงเป็นแนวทางเดิม รายละเอียดการเปลี่ยนแปลงดูได้ที่ [ภาคผนวก ข — บันทึกการเปลี่ยนแปลง v1.1→v2.0](15-appendix.md)
 */}
 
 {/* METADATA (agent-only — not rendered to readers)
-> **หมายเหตุการเปลี่ยนชื่อ WTE → WUA:** เอกสารนี้ใช้คำว่า **WUA (Wallet Unit Attestation)** ตาม EUDI ARF 2.9.0 [REF-ARF] แทนคำว่า WTE เดิม ข้อกำหนดใน OID4VCI คงตามกระบวนการออกเอกสารที่ระบุใน §8.2 และภาคผนวก 8.1 ส่วน **ใน OID4VP** Thai profile กำหนดให้ Wallet รัฐบาลส่ง WIA และ WIA-PoP ครบคู่ ส่วน Wallet เอกชนเลือกส่งครบคู่หรือไม่ส่งทั้งคู่ได้ หากส่งไม่ครบคู่หรือหลักฐานตรวจไม่ผ่าน ให้ปฏิเสธ VP; Verifier ต้องจำแนกประเภท Wallet จากข้อมูลที่เชื่อถือได้ และปฏิเสธ VP หากจำแนกไม่ได้ [กลไก §8.4.2 และภาคผนวก 8.2](08.2-oid4vp-full-flow-detail.md) บทนี้กล่าวถึง WUA เฉพาะที่ปรากฏในกระแสงาน OID4VCI/OID4VP ส่วนแนวคิดและนิยามดู [บทที่ 10 — Wallet Unit Attestation (WUA)](10-wallet-unit-attestation.md)
+> **หมายเหตุการเปลี่ยนชื่อ WTE → WUA:** เอกสารนี้ใช้คำว่า **WUA (Wallet Unit Attestation)** ตาม EUDI ARF 2.9.0 [REF-ARF] แทนคำว่า WTE เดิม ข้อกำหนดใน OID4VCI คงตามกระบวนการออกเอกสารที่ระบุใน §8.2 และภาคผนวก 8.1 ส่วน **ใน OID4VP** Thai profile กำหนดให้ทุก Wallet ส่ง WIA และ WIA-PoP ครบคู่ หากขาดรายการใดหรือหลักฐานตรวจไม่ผ่าน ให้ปฏิเสธ VP โดยไม่ต้องจำแนกประเภท Wallet [กลไก §8.4.2 และภาคผนวก 8.2](08.2-oid4vp-full-flow-detail.md) บทนี้กล่าวถึง WUA เฉพาะที่ปรากฏใน flow OID4VCI/OID4VP ส่วนแนวคิดและนิยามดู [บทที่ 10 — Wallet Unit Attestation (WUA)](10-wallet-unit-attestation.md)
 */}
 
 ### 8.1.3. บทบาทและผู้มีส่วนได้ส่วนเสีย
@@ -126,13 +130,13 @@ flowchart LR
 |:----:|---------|:-----------------:|--------|----------|------------|
 | ① | เตรียมความพร้อม | — | — | — | ดาวน์โหลด Trusted List ที่เกี่ยวข้องฉบับเต็มในรูปแบบ JWT จาก CDN แบบ lazy และตรวจลายมือชื่อ JWT — ยังไม่มีปฏิสัมพันธ์กับคู่กรณี จึงไม่มี TC |
 | ② | รับคำเชิญ + ค้นหาข้อมูล | — | — | — | Credential Offer, Issuer Discovery, /.well-known/openid-credential-issuer เป็นมาตรฐาน OID4VCI ล้วน ยังไม่มีการตรวจสอบความน่าเชื่อถือของ Issuer ในระดับ Trust Framework |
-| ③ | ตรวจ Issuer ก่อนยืนยันตัวตน | **TC-3 (รอบแรก)** | Wallet (ฝั่งผู้ถือ) | Issuer | Wallet ตรวจ Credential Issuer Metadata เทียบกับบริการ Issuer ใน `LoTE.TrustedEntitiesList[].TrustedEntityServices[]` ก่อนขอ OTP/ยืนยันตัวตน (รายละเอียด §8.4.3 และ [§12.1](12.1-trust-list-publication-profile.md)) |
-| ④ | Token + Credential | **TC-2 เมื่อ Thai profile กำหนด** | Wallet → Authorization Server (ก่อนออก Access Token) | Wallet | Token Endpoint และ Credential Endpoint เป็น OID4VCI มาตรฐาน; หาก profile ใช้ Client Attestation ให้ตรวจที่ PAR หรือ Token Request ตาม Appendix E. Credential Request ใช้ `proofs.jwt`; ตรวจ Issuer/VC ในช่วง ⑤ |
+| ③ | ตรวจ Issuer ก่อนยืนยันตัวตน | **TC-3 (รอบแรก)** | Wallet (ฝั่งผู้ถือ) | Issuer | Wallet ตรวจ Credential Issuer Metadata เทียบกับบริการ Issuer ใน `LoTE.TrustedEntitiesList[].TrustedEntityServices[]` โดยเทียบ `credential_issuer` กับ URI หนึ่งรายการของบริการ Issuer ก่อนขอ OTP/ยืนยันตัวตน (รายละเอียด §8.4.3 และ [§12.1](12.1-trust-list-publication-profile.md)) |
+| ④ | Token + Credential | **TC-2 บังคับทุก Wallet** | Wallet → Authorization Server (ก่อนออก Access Token) | Client Attestation (WIA + PoP) | Issuer ตรวจ WIA กับ WIA-PoP จากผู้ให้บริการกระเป๋าใน Trusted List ก่อนออก Access Token |
 | ⑤ | ตรวจ VC + สถานะก่อนบันทึก | **TC-3 (รอบที่สอง) + TC-4** | Wallet (ฝั่งผู้ถือ) | Issuer + Status List | (1) TC-3 รอบที่สอง: ตรวจ SD-JWT VC ฉบับสมบูรณ์ — claims, iss, jti, ลายมือชื่อด้วย PK_iss, validFrom/Until, disclosures (รายละเอียด §8.4.3) (2) TC-4: ดึงและตรวจ Status List JWT เพื่อยืนยันว่า VC ยังไม่ถูกยกเลิก/ระงับ (รายละเอียด §8.4.4) |
 
 > **หมายเหตุ (TC-2):** ใน OID4VCI Flow นี้ **TC-2 (ตรวจ Wallet) ทำงานฝั่ง Issuer** ไม่ได้แสดงเป็น node แยกในภาพรวมนี้ เนื่องจากผู้ตรวจคือ Issuer ซึ่งเป็นฝั่งตรงข้ามกับผู้ถือที่ผู้อ่านมองตามภาพ flow กลไก TC-2 ใน OID4VCI อธิบายใน §8.4.2 และรายละเอียดเชิงลำดับขั้นอยู่ใน [ภาคผนวก 8.1](08.1-issuance-full-flow-detail.md)
 
-> **หมายเหตุ:** แผนภาพนี้เป็นผังขั้นตอนภาพรวมฉบับย่อ (oversimplified overview) เพื่อให้ผู้อ่านเห็นลำดับกระบวนการโดยรวม หากต้องการทำความเข้าใจขั้นตอน คำขอ-คำตอบ และการตรวจสอบความน่าเชื่อถือในรายละเอียด ให้ศึกษาจาก **[ภาคผนวก 8.1 — OID4VCI Full Flow ทางเทคนิคโดยละเอียด](08.1-issuance-full-flow-detail.md)** ซึ่งแสดง TC-2 เมื่อ profile กำหนด, Client Attestation ในขั้น Token, `proofs.jwt` ใน Credential Request และ DPoP แบบมีเงื่อนไข
+> **หมายเหตุ:** แผนภาพนี้เป็นผังขั้นตอนภาพรวมฉบับย่อ (oversimplified overview) เพื่อให้ผู้อ่านเห็นลำดับกระบวนการโดยรวม หากต้องการทำความเข้าใจขั้นตอน คำขอ-คำตอบ และการตรวจสอบความน่าเชื่อถือในรายละเอียด ให้ศึกษาจาก **[ภาคผนวก 8.1 — OID4VCI Full Flow ทางเทคนิคโดยละเอียด](08.1-issuance-full-flow-detail.md)** ซึ่งแสดง TC-2 ที่บังคับทุก Wallet, Client Attestation ในขั้น Token, `proofs.jwt` ใน Credential Request และ DPoP แบบมีเงื่อนไข
 
 ### 8.2.3. แผนภาพ Sequence ฉบับสมบูรณ์และนโยบาย DPoP
 
@@ -154,7 +158,7 @@ flowchart LR
 
 ### 8.3.2. ผังขั้นตอนภาพรวม — Flow การแสดงเอกสารรับรอง (OID4VP)
 
-แผนภาพนี้แสดงภาพรวมทั้งกระบวนการ แบ่งเป็น 6 ช่วงหลัก (1) เตรียมความพร้อม (2) Verifier ขอข้อมูล (3) Wallet ตรวจ Verifier (4) ยืนยันและสร้าง VP (5) ส่ง VP และตรวจ Wallet ตามเงื่อนไข TC-2 และ (6) Verifier ตรวจ VC และสถานะ สำหรับ OID4VP จุดตรวจ TC-1, TC-3 และ TC-4 ทำงานตามปกติ ส่วน TC-2 กำหนดให้ Wallet รัฐบาลส่ง WIA/WIA-PoP ครบคู่; Wallet เอกชนเลือกส่งครบคู่หรือไม่ส่งทั้งคู่ได้ โดย Verifier ต้องจำแนกประเภท Wallet จากข้อมูลที่เชื่อถือได้ หากตรวจประเภทไม่ได้ให้ปฏิเสธ VP (กลไกแต่ละจุดอธิบายใน §8.4)
+แผนภาพนี้แสดงภาพรวมทั้งกระบวนการ แบ่งเป็น 6 ช่วงหลัก (1) เตรียมความพร้อม (2) Verifier ขอข้อมูล (3) Wallet ตรวจ Verifier (4) ยืนยันและสร้าง VP (5) ส่ง VP และตรวจ Wallet ตามเงื่อนไข TC-2 และ (6) Verifier ตรวจ VC และสถานะ สำหรับ OID4VP จุดตรวจ TC-1, TC-3 และ TC-4 ทำงานตามปกติ ส่วน TC-2 กำหนดให้ทุก Wallet ส่ง WIA/WIA-PoP ครบคู่ และปฏิเสธ VP เมื่อขาดรายการใด (กลไกแต่ละจุดอธิบายใน §8.4)
 
 ```mermaid
 flowchart LR
@@ -166,7 +170,7 @@ flowchart LR
     P2(["② Verifier ขอข้อมูล<br/>Auth Request + QR"]):::std
     P3(["③ Wallet ตรวจ Verifier<br/>TC-1"]):::tc
     P4(["④ ยืนยัน + สร้าง VP<br/>Selective Disclosure"]):::std
-    P5(["⑤ ส่ง VP + ตรวจ Wallet ตามประเภท<br/>TC-2 ตามข้อกำหนดของประเภท Wallet"]):::tc
+    P5(["⑤ ส่ง VP + ตรวจ Wallet<br/>TC-2 ตรวจ WIA/WIA-PoP"]):::tc
     P6(["⑥ Verifier ตรวจ VC + สถานะ<br/>TC-3 + TC-4"]):::tc
 
     P1 --> P2 --> P3 --> P4 --> P5 --> P6
@@ -180,7 +184,7 @@ flowchart LR
 | ② | Verifier ขอข้อมูล | — | — | — | Verifier สร้าง Authorization Request, Request Object (JWS), แสดง QR/ deep link ตาม OID4VP มาตรฐาน — การยืนยันตัวตนของ Verifier จะเกิดในช่วง ③ |
 | ③ | Wallet ตรวจ Verifier | **TC-1** | Wallet (ฝั่งผู้ถือ) | Verifier | ก่อนยินยอมให้ข้อมูล Wallet ตรวจบริการ Verifier ใน Trusted List ลายมือชื่อ Request Object และขอบเขต claims กับวัตถุประสงค์ตาม Thai profile (รายละเอียด §8.4.1 และ [§12.1](12.1-trust-list-publication-profile.md)) |
 | ④ | ยืนยัน + สร้าง VP | — | — | — | แสดง Consent UI ให้ผู้ใช้กดยินยอม, จับคู่ Disclosure, สร้าง VP ตาม DCQL เป็น OID4VP มาตรฐาน — ยังไม่มีการตรวจสอบข้ามฝั่งในระดับ Trust Framework |
-| ⑤ | ส่ง VP + ตรวจ Wallet | **TC-2 ตามประเภท Wallet** | Verifier | Wallet (WIA/WIA-PoP) | Wallet รัฐบาล MUST ส่งหลักฐานครบคู่; Wallet เอกชน MAY ส่งครบคู่หรือไม่ส่งทั้งคู่ Verifier ต้องจำแนกประเภทจากข้อมูลที่เชื่อถือได้ หากตรวจประเภทไม่ได้ ให้ปฏิเสธ VP; หลักฐานไม่ครบหรือไม่ผ่านการตรวจให้ปฏิเสธ (รายละเอียด §8.4.2) |
+| ⑤ | ส่ง VP + ตรวจ Wallet | **TC-2** | Verifier | Wallet (WIA/WIA-PoP) | Wallet ทุกตัว MUST ส่ง WIA และ WIA-PoP ครบคู่; Verifier ตรวจผู้ให้บริการกระเป๋าใน Trusted List และลายมือชื่อทั้งสองรายการ; ขาดรายการใดหรือไม่ผ่าน ให้ปฏิเสธ VP |
 | ⑥ | Verifier ตรวจ VC + สถานะ | **TC-3 + TC-4** | Verifier | Issuer + Status List | (1) TC-3: ตรวจ SD-JWT VC ใน `vp_token` — iss/jti, ดึง PK_iss ผ่าน DID Resolution, ตรวจลายมือชื่อ, validFrom/Until, disclosures ตรงกับ DCQL (รายละเอียด §8.4.3) (2) TC-4: ดึงและตรวจ Status List JWT เพื่อยืนยันว่า VC ยังไม่ถูกยกเลิก/ระงับ (รายละเอียด §8.4.4) |
 
 > **หมายเหตุ:** แผนภาพนี้เป็นผังขั้นตอนภาพรวมฉบับย่อ (oversimplified overview) เพื่อให้ผู้อ่านเห็นลำดับกระบวนการโดยรวม หากต้องการทำความเข้าใจขั้นตอน คำขอ-คำตอบ และการตรวจสอบความน่าเชื่อถือในรายละเอียด ให้ศึกษาจาก **[ภาคผนวก 8.2 — OID4VP Full Flow ทางเทคนิคโดยละเอียด](08.2-oid4vp-full-flow-detail.md)** ซึ่งประกอบด้วยแผนภาพ Sequence ฉบับสมบูรณ์ คำอธิบายระดับ field-by-field และสรุปจุดตรวจ L1–L7
@@ -193,11 +197,11 @@ flowchart LR
 
 ---
 
-## 8.4. กลไกการตรวจสอบความน่าเชื่อถือ 4 จุดตรวจ (TC-1 ถึง TC-4)
+## 8.4. กลไกการตรวจสอบความน่าเชื่อถือ 4 จุดตรวจ (Trust Check 1 ถึง Trust Check 4) — ย่อว่า TC-1 ถึง TC-4
 
 ทั้ง 2 กระบวนการ (OID4VCI และ OID4VP) ใช้ชุดจุดตรวจเดียวกัน ต่างกันที่ผู้ดำเนินการตรวจและผู้ถูกตรวจ บทนี้อธิบายกลไกด้วยข้อความเชิงบรรยายเพื่อให้ผู้อ่านเข้าใจการทำงานของแต่ละจุดตรวจ โดยไม่อาศัยแผนภาพลำดับการตัดสินใจ (decision flow) ฉบับย่อยซึ่งเคยก่อให้เกิดความสับสนในฉบับก่อนหน้า
 
-### 8.4.1. TC-1 — กระเป๋าเอกสารดิจิทัลตรวจสอบผู้ตรวจสอบเอกสาร (Wallet ตรวจ Verifier)
+### 8.4.1. Trust Check 1 (TC-1) — กระเป๋าเอกสารดิจิทัลตรวจสอบผู้ตรวจสอบเอกสาร (Wallet ตรวจ Verifier)
 
 จุดตรวจ TC-1 ปรากฏเฉพาะในกระบวนการ OID4VP และถือเป็นจุดควบคุมความปลอดภัยที่สำคัญที่สุดของฝั่งกระเป๋าเอกสารดิจิทัล เนื่องจากเป็นด่านสุดท้ายก่อนที่กระเป๋าจะส่งข้อมูลส่วนบุคคลของผู้ถือออกไปยังผู้ตรวจสอบเอกสาร
 
@@ -205,27 +209,25 @@ flowchart LR
 
 1. **แยกกุญแจสาธารณะของผู้ตรวจสอบเอกสาร (Public Key — PK_v)** จาก Request Object ที่ลงนามแล้ว
 2. **ตรวจสอบลายมือชื่อ Trusted List** ด้วย ETDA public key เพื่อยืนยันว่าข้อมูล Trusted List ที่จัดเก็บไว้ในเครื่องยังน่าเชื่อถือ
-3. **ค้นหาบริการ Verifier ใน `LoTE.TrustedEntitiesList[].TrustedEntityServices[]`** โดยตรวจ `ServiceInformation.ServiceTypeIdentifier` และกุญแจใน `ServiceDigitalIdentity` ต้องยืนยันสถานะระดับองค์กรและบริการเป็น `active` ตาม Thai profile ได้ มิฉะนั้นให้หยุดดำเนินการทันที [research/42](../research/42-trusted-list-lote-jwt-format.md)
+3. **ค้นหาบริการ Verifier ใน `LoTE.TrustedEntitiesList[].TrustedEntityServices[]`** โดยตรวจ `ServiceInformation.ServiceTypeIdentifier` และกุญแจใน `ServiceDigitalIdentity` ต้องพบบริการ Verifier ที่บทบาทตรงใน Trusted List และกุญแจตรงกับที่ประกาศไว้ มิฉะนั้นให้หยุดดำเนินการทันที [research/42](../research/42-trusted-list-lote-jwt-format.md)
 4. **ตรวจสอบลายมือชื่อ Request Object ด้วย PK_v** พร้อมตรวจสอบ `aud`, `exp`/`iat` และค่า `nonce`
 5. **ตรวจสอบขอบเขตข้อมูลที่ขอ** — `dcql_query.claims[].path` ต้องอยู่ภายในขอบเขต claims ที่ Thai profile ของบริการ Verifier ประกาศไว้
 6. **ตรวจสอบวัตถุประสงค์** — `purpose` ต้องอยู่ในขอบเขตวัตถุประสงค์ที่ Thai profile ของบริการ Verifier ประกาศไว้; หากไม่มีข้อมูลให้ปฏิเสธ [research/42](../research/42-trusted-list-lote-jwt-format.md)
 
 เมื่อผ่านทุกขั้นตอน กระเป๋าเอกสารดิจิทัลจึงจะแสดง Consent UI ให้ผู้ใช้อนุมัติการส่งข้อมูล หากขั้นตอนใดไม่ผ่าน กระเป๋าเอกสารดิจิทัล MUST หยุดดำเนินการทันทีและไม่ส่งข้อมูลใด ๆ ออกไป
 
-### 8.4.2. TC-2 — การตรวจสอบความน่าเชื่อถือของกระเป๋าเอกสารดิจิทัล (Issuer/Verifier ตรวจ Wallet)
+### 8.4.2. Trust Check 2 (TC-2) — การตรวจสอบความน่าเชื่อถือของกระเป๋าเอกสารดิจิทัล (Issuer/Verifier ตรวจ Wallet)
 
-จุดตรวจ TC-2 ปรากฏทั้งใน OID4VCI และ OID4VP เพื่อให้ผู้ออกเอกสารหรือผู้ตรวจสอบเอกสารยืนยันความน่าเชื่อถือของ Wallet ตาม Thai profile. ใน OID4VCI เมื่อใช้ Wallet Attestation ตาม Appendix E ให้ส่ง Client Attestation ใน Pushed Authorization Request หรือ Token Request เพื่อยืนยัน Client ต่อ Authorization Server ก่อนออก Access Token; รายละเอียด OID4VCI อยู่ใน [§8.2](08-implementation-guidelines.md) และ [ภาคผนวก 8.1](08.1-issuance-full-flow-detail.md). `proofs.jwt` ใน Credential Request แยกต่างหากและใช้พิสูจน์การครอบครองกุญแจที่จะผูกกับ Credential.
+จุดตรวจ TC-2 ปรากฏทั้งใน OID4VCI และ OID4VP และบังคับกับทุก Wallet. ใน OID4VCI Wallet ส่ง Client Attestation ตาม OID4VCI Appendix E ใน Pushed Authorization Request หรือ Token Request ทุกครั้ง เพื่อยืนยัน Client ต่อ Authorization Server
 
-หาก Thai profile กำหนด TC-2 ใน OID4VCI ผู้ออก/Authorization Server ต้องตรวจ Attestation และ PoP ตามกลไกที่ profile ประกาศก่อนออก Access Token, ตรวจ trust source/ลายมือชื่อและสถานะ Wallet ตามข้อมูลที่ profile กำหนด, และปฏิเสธเมื่อหลักฐานไม่ครบหรือไม่ผ่าน. OID4VCI Appendix E ไม่ได้กำหนด Trusted List schema หรือ Wallet Provider Registry ของไทย; แหล่งข้อมูล ฟิลด์ค้นหา freshness และการจัดการข้อผิดพลาดจึงเป็นเรื่องที่ Thai profile ต้องกำหนด.
+ผู้ออก/Authorization Server ต้องตรวจ Attestation และ PoP ตามกลไกใน Appendix E ก่อนออก Access Token ตรวจว่าผู้ให้บริการกระเป๋าอยู่ใน Trusted List ตรวจลายมือชื่อของ WIA และ WIA-PoP และปฏิเสธเมื่อหลักฐานไม่ครบหรือไม่ผ่าน. OID4VCI Appendix E ไม่ได้กำหนด Trusted List source ไว้เอง Thai profile จึงกำหนดให้ตรวจจากรายการ Wallet Provider
 
-กติกาแยกประเภท Wallet ด้านล่างใช้กับ TC-2 ของ OID4VP เท่านั้น.
+กติกาด้านล่างใช้กับ TC-2 ของ OID4VP.
 
 ใน OID4VP ผู้ตรวจสอบเอกสารดำเนินการตรวจหลังได้รับ Authorization Response ดังนี้:
 
-1. ตรวจประเภท Wallet จากข้อมูล Wallet Provider ที่เชื่อถือได้และ Thai profile ซึ่งต้องกำหนดแหล่งข้อมูลและวิธีตรวจประเภทก่อนใช้งานจริง หากไม่มีข้อมูล ข้อมูลไม่สดใหม่ หรือตรวจประเภทไม่ได้ ให้ปฏิเสธ VP
-2. **Wallet รัฐบาล:** ต้องมี WIA และ WIA-PoP ครบทั้งคู่ หากขาดรายการใด ให้ปฏิเสธ VP
-3. **Wallet เอกชน:** MAY เลือกส่ง WIA และ WIA-PoP ครบทั้งคู่เพื่อทำ TC-2 หรือไม่ส่งทั้งคู่เพื่อข้าม TC-2 และตรวจ TC-3/TC-4 ต่อ; หากส่งมาเพียงรายการเดียว ให้ปฏิเสธ VP
-4. เมื่อมี WIA และ WIA-PoP ครบ ให้ทำ TC-2:
+1. Wallet ต้องส่ง WIA และ WIA-PoP ครบทั้งคู่ หากขาดรายการใด ให้ปฏิเสธ VP และไม่มีเส้นทางข้าม TC-2
+2. เมื่อมี WIA และ WIA-PoP ครบ ให้ทำ TC-2:
    - แยก WIA เพื่ออ่าน `iss` (Wallet Provider ID) และ `PK_wp`
    - ค้นหา PK_wp ในบริการ Wallet Provider ใน `LoTE.TrustedEntitiesList[].TrustedEntityServices[]`; หากไม่พบ ให้ตอบกลับด้วย `400 untrusted_wallet_provider` [research/42](../research/42-trusted-list-lote-jwt-format.md)
    - ตรวจลายมือชื่อ WIA ด้วย PK_wp และตรวจช่วงเวลา `iat`/`exp`
@@ -234,7 +236,7 @@ flowchart LR
 
 หาก WIA หรือ WIA-PoP ที่ส่งมาตรวจไม่ผ่าน Verifier MUST ปฏิเสธ VP
 
-### 8.4.3. TC-3 — การตรวจสอบความน่าเชื่อถือของผู้ออกเอกสาร (Wallet/Verifier ตรวจ Issuer)
+### 8.4.3. Trust Check 3 (TC-3) — การตรวจสอบความน่าเชื่อถือของผู้ออกเอกสาร (Wallet/Verifier ตรวจ Issuer)
 
 จุดตรวจ TC-3 ปรากฏทั้งใน OID4VCI และ OID4VP โดยมีจุดประสงค์เพื่อยืนยันว่าเอกสารรับรองที่ได้รับมีผู้ออกเอกสารที่น่าเชื่อถือและลายมือชื่อถูกต้อง
 
@@ -248,16 +250,16 @@ flowchart LR
 กลไกของ TC-3 ในการตรวจแต่ละครั้งมีลำดับขั้นตอนหลัก ดังนี้
 
 1. **แยก claims** จาก JWT payload ได้แก่ `iss`, `jti`, `sub`, `@context`, `type`
-2. **ค้นหาบริการ Issuer ใน `LoTE.TrustedEntitiesList[].TrustedEntityServices[]`** ต้องยืนยันสถานะระดับองค์กรและบริการเป็น `active` ตาม Thai profile ได้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
+2. **ค้นหาบริการ Issuer ใน `LoTE.TrustedEntitiesList[].TrustedEntityServices[]`** ต้องพบบริการ Issuer ที่บทบาทตรงใน Trusted List และกุญแจตรงกับที่ประกาศไว้ [research/42](../research/42-trusted-list-lote-jwt-format.md)
 3. **ตรวจสอบความสอดคล้องของข้อมูล** — ตรวจ `iss` และ `jti` ตามรูปแบบ VC ที่ได้รับ และตรวจประเภท VC กับขอบเขตสิทธิ์ของ Issuer ใน Thai profile; `@context` และ `type` ใช้ตรวจเฉพาะ VC รูปแบบ W3C VCDM ตามข้อกำหนดของรูปแบบนั้น
-4. **ดึงกุญแจสาธารณะของผู้ออกเอกสาร (PK_iss)** โดย dereference `kid` ผ่าน DID Resolver
+4. **ดึงกุญแจสาธารณะของผู้ออกเอกสาร (PK_iss)** โดย dereference `kid` ผ่าน DID Resolver แล้ว **ต้อง** เทียบกุญแจนั้นกับ `ServiceDigitalIdentity.X509Certificates[].val` หรือ `ServiceDigitalIdentity.OtherIds[]` ของบริการ Issuer ใน Trusted List; ไม่พบหรือไม่ตรง ให้ปฏิเสธ
 5. **ตรวจสอบลายมือชื่อ SD-JWT VC** ด้วย PK_iss
 6. **ตรวจสอบช่วงเวลาใช้งาน** — `validFrom ≤ now ≤ validUntil`
 7. **ตรวจสอบ disclosures** ในกรณี OID4VP — ต้อง hash ตรงกับ `_sd` ใน issuer_jwt และ DCQL query ต้อง match กับ `reconstructed_credential`
 
 หากขั้นตอนใดไม่ผ่าน ฝั่งที่ดำเนินการตรวจ MUST ปฏิเสธคำขอหรือทิ้ง VC ทันที
 
-### 8.4.4. TC-4 — การตรวจสอบสถานะเอกสาร (Wallet/Verifier ตรวจ Status List)
+### 8.4.4. Trust Check 4 (TC-4) — การตรวจสอบสถานะเอกสาร (Wallet/Verifier ตรวจ Status List)
 
 จุดตรวจ TC-4 ปรากฏทั้งใน OID4VCI และ OID4VP โดยมีจุดประสงค์เพื่อยืนยันว่าเอกสารรับรองที่ลงนามโดยผู้ออกเอกสารที่น่าเชื่อถือยังคงสถานะใช้งานได้ ไม่ถูกยกเลิกหรือระงับ
 
@@ -277,12 +279,12 @@ flowchart LR
 
 ตารางต่อไปนี้สรุปหน้าที่ของจุดตรวจทั้ง 4 ด่าน และเทียบเคียงกับกลไกในโครงสร้างพื้นฐานกุญแจสาธารณะ (Public Key Infrastructure — PKI) เพื่อให้ผู้อ่านที่คุ้นเคยกับ PKI เข้าใจความสอดคล้อง
 
-| รหัส | ตรวจอะไร | ใครตรวจ | ปรากฏใน | บังคับ? | เทียบเคียง PKI |
+| จุดตรวจ | ตรวจอะไร | ใครตรวจ | ปรากฏใน | บังคับ? | เทียบเคียง PKI |
 |------|---------|--------|---------|--------|---------------|
-| **TC-1** | ตรวจว่าผู้ขอข้อมูลน่าเชื่อถือ | Wallet | OID4VP เท่านั้น | ใช่ — Wallet MUST ตรวจ Verifier ก่อนส่งข้อมูลใด ๆ | ตรวจ Relying Party identity |
-| **TC-2** | ตรวจว่า Wallet น่าเชื่อถือ | Issuer (OID4VCI) / Verifier (OID4VP) | ทั้ง 2 Flow | OID4VCI ตาม §8.2; สำหรับ OID4VP ต้องจำแนกประเภท Wallet จากข้อมูลที่เชื่อถือได้ (หากทำไม่ได้ให้ปฏิเสธ VP); Wallet รัฐบาลต้องส่งและผ่านการตรวจ WIA/WIA-PoP ครบคู่ ส่วน Wallet เอกชนเลือกส่งครบคู่หรือไม่ส่งทั้งคู่ หากส่งไม่ครบหรือหลักฐานตรวจไม่ผ่านต้องปฏิเสธ | ตรวจ Application identity |
-| **TC-3** | ตรวจว่า Issuer น่าเชื่อถือ + ลายมือชื่อถูกต้อง | Wallet (OID4VCI) / Verifier (OID4VP) | ทั้ง 2 Flow | ใช่ — ใน OID4VCI ตรวจ 2 รอบ (early + full) | ตรวจ Issuer identity + signature |
-| **TC-4** | ตรวจว่าสถานะ VC ใช้งานได้ | Wallet (OID4VCI) / Verifier (OID4VP) | ทั้ง 2 Flow | ใช่ — MUST ตรวจ Status List ทุกครั้ง | ตรวจสถานะ JWT แบบ Status List |
+| **Trust Check 1 (TC-1)** | ตรวจว่าผู้ขอข้อมูลน่าเชื่อถือ | Wallet | OID4VP เท่านั้น | ใช่ — Wallet MUST ตรวจ Verifier ก่อนส่งข้อมูลใด ๆ | ตรวจ Relying Party identity |
+| **Trust Check 2 (TC-2)** | ตรวจว่า Wallet น่าเชื่อถือ | Issuer (OID4VCI) / Verifier (OID4VP) | ทั้ง 2 Flow | OID4VCI ต้องส่ง Client Attestation ตาม Appendix E ทุกครั้ง; OID4VP Wallet ต้องส่ง WIA และ WIA-PoP ครบคู่ ตรวจผู้ให้บริการกระเป๋าใน Trusted List และลายมือชื่อทั้งสองรายการ; ขาดหรือไม่ผ่านต้องปฏิเสธ | ตรวจ Application identity |
+| **Trust Check 3 (TC-3)** | ตรวจว่า Issuer น่าเชื่อถือ + ลายมือชื่อถูกต้อง | Wallet (OID4VCI) / Verifier (OID4VP) | ทั้ง 2 Flow | ใช่ — ใน OID4VCI ตรวจ 2 รอบ (early + full) | ตรวจ Issuer identity + signature |
+| **Trust Check 4 (TC-4)** | ตรวจว่าสถานะ VC ใช้งานได้ | Wallet (OID4VCI) / Verifier (OID4VP) | ทั้ง 2 Flow | ใช่ — MUST ตรวจ Status List ทุกครั้ง | ตรวจสถานะ JWT แบบ Status List |
 
 > **ข้อสังเกต:** TC-4 ใช้ IETF Token Status List [REF-TSL] ซึ่งเก็บค่า status แบบบรรจุหลายรายการใน byte array ตามความกว้าง `bits` แล้วบีบอัดเป็น JWT; ผู้ออก Status List ลงลายมือชื่อ Status List JWT และผู้ตรวจสอบต้องตรวจลายมือชื่อนั้นด้วยกุญแจที่เชื่อถือได้ของผู้ออก Status List ตาม profile
 
@@ -296,17 +298,17 @@ flowchart LR
 
 **กรณีที่ 2 — `did:key:z6Mki...`:** กุญแจสาธารณะถูกฝังอยู่ในสายอักขระของ DID โดยตรง (self-contained) ฝ่ายที่ตรวจสอบสามารถแยกกุญแจสาธารณะออกมาได้ทันทีโดยไม่ต้องอาศัยเครือข่าย ไม่มีผู้ดูแลส่วนกลาง
 
-**กรณีที่ 3 — `did:ndid:...` หรือ custom DID method:** ฝ่ายที่ตรวจสอบส่งคำขอไปยัง ETDA Trust Gateway ซึ่งทำหน้าที่เป็น Universal Resolver กรณีนี้ต้องอาศัยเครือข่ายและใช้ API key ผู้ดูแลคือ สพธอ. (ETDA)
+**กรณีที่ 3 — `did:ndid:...` หรือ proprietary DID method:** ฝ่ายที่ตรวจสอบติดต่อผู้ให้บริการของ DID method นั้นเอง เช่น NDID ในกรณี `did:ndid`
 
 | DID method | วิธี resolve DID | ต้องเครือข่าย? | ผู้ดูแล |
 |-----------|-------------|:------------:|---------|
 | `did:web:issuer.example.th` | HTTPS GET `.well-known/did.json` | ใช่ | Issuer เอง |
 | `did:key:z6Mki...` | แยกจากสายอักขระ DID (self-contained) | ไม่ | ไม่มี |
-| `did:ndid:...` / custom | ETDA Trust Gateway Universal Resolver (API key) | ใช่ | สพธอ. (ETDA) |
+| `did:ndid:...` / proprietary | ติดต่อ NDID โดยตรง ผ่าน resolver ของ NDID | ใช่ | NDID |
 
-> **สำคัญ:** ทั้ง 3 กรณีต้องดำเนินการภายหลังจากผ่าน TC-3 แล้ว กล่าวคือ การ resolve DID เกิดขึ้นหลังยืนยันความน่าเชื่อถือของผู้ออกเอกสารจาก Trusted List แล้ว เพื่อให้ทราบว่าต้องดึงกุญแจสาธารณะจากแหล่งใด
+> **สำคัญ:** ทั้ง 3 กรณีต้องดำเนินการภายหลังจากผ่าน TC-3 แล้ว กล่าวคือ การ resolve DID เกิดขึ้นหลังยืนยันความน่าเชื่อถือของผู้ออกเอกสารจาก Trusted List แล้ว เพื่อให้ทราบว่าต้องดึงกุญแจสาธารณะจากแหล่งใด และกุญแจที่ resolve ได้ **ต้อง** ตรงกับ `ServiceDigitalIdentity` ของบริการ Issuer ใน Trusted List ตามข้อ 8.4.3
 >
-> **หมายเหตุ `did:ndid`:** ปัจจุบันยังไม่จดทะเบียนใน W3C DID method registry สพธอ. ต้องพัฒนา DID method spec + Universal Resolver driver เอง
+> **หมายเหตุ `did:ndid`:** `did:ndid` เป็น proprietary DID method ของ NDID ผู้ออกแบบระบบที่เลือกใช้ต้องติดต่อ NDID เพื่อขอ resolve DID Document
 
 ---
 
@@ -317,8 +319,8 @@ flowchart LR
 | หัวข้อ | กฎเสริม (RFC 2119) | ที่มา |
 |--------|--------------------|------|
 | Access Token TTL | SHOULD ตั้งอายุสั้น (เช่น 5 นาที) และผูกกับอุปกรณ์ (DPoP หรือ cnf) — แนวปฏิบัติที่เอกสารนี้เสนอเพิ่มเติมจากข้อกำหนด OID4VCI | [REF-OID4VCI] |
-| Trusted List TTL | SHOULD ตั้งอายุไม่เกิน 24 ชั่วโมง และ SHOULD มีระบบ push notification เมื่อมีการเปลี่ยนแปลง | แนวปฏิบัติ [REF-ARF] |
-| WUA | MUST ใช้ WUA ตาม EUDI ARF 2.9.0 ใน OID4VCI ตาม §8.2; สำหรับ OID4VP Verifier MUST จำแนกประเภท Wallet จากข้อมูลที่เชื่อถือได้และปฏิเสธ VP หากทำไม่ได้; Wallet รัฐบาล MUST ส่ง WIA/WIA-PoP ครบคู่ ส่วน Wallet เอกชน MAY ส่งครบคู่หรือไม่ส่งทั้งคู่ (Thai-profile extension) | [REF-ARF] |
+| Trusted List cache | SHOULD เก็บ snapshot ที่ตรวจลายมือชื่อแล้วในหน่วยความจำด้วย soft TTL 90 ถึง 120 วินาที และ refresh ด้วย HTTP conditional request ตามข้อ 12.8; ห้ามใช้ message broker หรือ background polling | ข้อ 12.8, [research/43] |
+| WUA | OID4VCI: ส่ง WIA/WIA-PoP เป็น client authentication ตาม Appendix E ทุกครั้ง และห้ามถือว่า WUA ตาม EUDI ARF เทียบเท่า OID4VCI Wallet Attestation โดยอัตโนมัติ (ข้อ 10.2.3); OID4VP Wallet ทุกตัวต้องส่ง WIA และ WIA-PoP |
 | DPoP | SHOULD ใช้ DPoP (RFC 9449) สำหรับ Access Token binding | [REF-DPOP] |
 | PKCE | MUST ใช้ PKCE (RFC 7636) ใน Authorization Code flow | [REF-PKCE] |
 | Consent UI | MUST แสดงข้อมูล Verifier, ข้อมูลที่ขอ, วัตถุประสงค์ และให้ผู้ใช้เลือกเปิดเผยเฉพาะที่จำเป็น | [REF-ARF] [REF-PDPA] |
@@ -333,7 +335,7 @@ flowchart LR
 รายงานฉบับนี้ศึกษาการออกและแสดงเอกสารรับรองดิจิทัล โดยใช้กรณีศึกษาการออกใบประมวลผลการศึกษา (Transcript) ของสถาบันการศึกษาในประเทศไทย ตามแผนภาพที่แสดงใน [§7](07-cross-ecosystem-interoperability.md) และ [§9](09-trust-model-3.md) โดยมีข้อกำหนดซึ่งคงไว้จากฉบับเวอร์ชัน 1.1 ดังนี้
 
 1. การศึกษามุ่งเน้นไปที่ขั้นตอนการออกเอกสารรับรองดิจิทัล (VC) และการแสดงเอกสารสำแดงดิจิทัล (VP)
-2. กระบวนการดึงข้อมูล (Resolve) DID Document ตามมาตรฐานของ W3C จะใช้ DIF Universal Resolver ซึ่งในรายงานฉบับนี้ใช้ DIF Universal Resolver จำลองของ สพธอ. (ETDA) ที่พัฒนาขึ้นเพื่อรองรับความพร้อมของการใช้งานของผู้ให้บริการในคณะทำงานส่งเสริมการพัฒนา Document Wallet และ Verifiable Credentials เพื่อไปดึงข้อมูล DID Document จาก Registry
+2. กระบวนการดึงข้อมูล (Resolve) DID Document ตามมาตรฐานของ W3C ใช้ resolver ของ DID method นั้น หรือ resolver ของ สพธอ. สำหรับ public DID method ในรายงานฉบับนี้ใช้ resolver จำลองของ สพธอ. เพื่อทดสอบการดึงข้อมูล DID Document จาก Registry
 3. ขั้นตอนการลงทะเบียน (Register) จะดำเนินการโดยใช้โปรโตคอล OID4VP ในรายงานฉบับนี้คณะทำงานส่งเสริมการพัฒนา Document Wallet และ Verifiable Credentials ได้สร้าง DID Document แล้วบันทึกลง Registry เอง
 
 ---
@@ -349,14 +351,12 @@ flowchart LR
 | ใช้ IETF Token Status List | ✅ | | |
 | ใช้ PKCE ใน Authorization Code flow | ✅ | | |
 | ตรวจสอบ Issuer/Verifier ใน Trusted List | ✅ | | |
-| จำแนกประเภท Wallet รัฐบาล/เอกชนจากข้อมูล Wallet Provider ที่เชื่อถือได้และตรวจสอบความสดใหม่ได้ใน OID4VP; หากจำแนกไม่ได้ให้ปฏิเสธ VP | ✅ | | |
 | ตรวจ Status List ก่อนใช้ VC (TC-4) | ✅ | | |
-| ใช้ WUA ใน OID4VCI ตาม §8.2 | ✅ | | |
-| Wallet รัฐบาลส่ง WIA และ WIA-PoP ครบคู่ใน OID4VP | ✅ | | |
-| Wallet เอกชนเลือกส่ง WIA/WIA-PoP ครบคู่หรือไม่ส่งทั้งคู่ใน OID4VP | | | ✅ |
+| ใช้ WIA/WIA-PoP ใน OID4VCI เป็น client authentication บังคับตาม Appendix E | ✅ | | |
+| Wallet ทุกตัวส่ง WIA และ WIA-PoP ครบคู่ใน OID4VP | ✅ | | |
 | ปฏิเสธ WIA/WIA-PoP ที่ส่งไม่ครบหรือไม่ผ่านการตรวจ | ✅ | | |
 | ใช้ DPoP สำหรับ Access Token binding | | ✅ | |
-| ใช้ W3C DID Universal Resolver | ✅ | | |
+| resolve DID ตาม DID Core | ✅ | | |
 | รองรับ `did:web` โดยตรง | | ✅ | |
 | รองรับ `did:key` โดยตรง | | ✅ | |
 | แสดง Consent UI ครบถ้วน | ✅ | | |

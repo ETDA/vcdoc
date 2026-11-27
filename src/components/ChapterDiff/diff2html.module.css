@@ -1,0 +1,83 @@
+/* diff2html ships px sizes and light-only colours. Everything here rescales it
+   to rem, honours Docusaurus' colour variables and lets long Thai lines wrap. */
+
+.diffHost {
+  font-size: 0.875rem;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+.diffHost :global(.d2h-wrapper) {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  text-align: start;
+}
+
+.diffHost :global(.d2h-file-header) {
+  height: auto;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.diffHost :global(.d2h-file-name) {
+  font-size: 0.85rem;
+}
+
+.diffHost :global(.d2h-code-line),
+.diffHost :global(.d2h-code-side-line) {
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.diffHost :global(.d2h-code-line-ctn) {
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.diffHost :global(.d2h-code-linenumber),
+.diffHost :global(.d2h-code-side-linenumber) {
+  block-size: auto;
+  min-block-size: 1.6rem;
+  padding: 0 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.diffHost :global(.d2h-file-wrapper) {
+  margin-block-end: 0;
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+:global([data-theme='dark']) .diffHost :global(.d2h-file-wrapper) {
+  background: var(--ifm-background-surface-color);
+}
+
+:global([data-theme='dark']) .diffHost :global(.d2h-file-header) {
+  background: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+:global([data-theme='dark']) .diffHost :global(.d2h-code-line-ctn),
+:global([data-theme='dark']) .diffHost :global(.d2h-code-line),
+:global([data-theme='dark']) .diffHost :global(.d2h-code-side-line) {
+  color: var(--ifm-font-color-base);
+}
+
+:global([data-theme='dark']) .diffHost :global(.d2h-ins) {
+  border-color: rgba(63, 185, 80, 0.4);
+  background: rgba(46, 160, 67, 0.18);
+}
+
+:global([data-theme='dark']) .diffHost :global(.d2h-del) {
+  border-color: rgba(248, 81, 73, 0.4);
+  background: rgba(248, 81, 73, 0.16);
+}
+
+:global([data-theme='dark']) .diffHost :global(.d2h-code-linenumber),
+:global([data-theme='dark']) .diffHost :global(.d2h-code-side-linenumber) {
+  border-color: var(--ifm-color-emphasis-300);
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-700);
+}

@@ -1,5 +1,6 @@
 ---
-description: "14. ความมั่นคงปลอดภัย: Threat Model และรายการตรวจ Conformance — Thai VC ARF 2.0 DRAFT 0"
+description: "14. ความมั่นคงปลอดภัย: Threat Model และรายการตรวจ Conformance — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 14
 ---
 
 # 14. ความมั่นคงปลอดภัย: Threat Model และรายการตรวจ Conformance
@@ -24,17 +25,7 @@ description: "14. ความมั่นคงปลอดภัย: Threat Mo
 
 หัวข้อนี้รวม threat model และรายการตรวจ conformance ของบทที่ 11–13 คือ (1) Cryptographic Suites (2) Key Management/Rotation และ Trusted List Deployment (3) VC Revocation ด้วย IETF Token Status List
 
-**กฎการอ้างอิงของหัวข้อนี้:** ข้อกำหนดทุกข้อ **MUST** สืบย้อนไปยังไฟล์ภายใต้ `th/architecture/` มาตรฐานภายนอกอ้างผ่านไฟล์สถาปัตยกรรมที่ระบุมาตรฐานนั้นไว้แล้ว หัวข้อนี้ **MUST NOT** สร้างข้อกำหนดใหม่ที่ไม่มีฐานในเอกสารสถาปัตยกรรม
-
-การจำแนกข้อความ:
-
-| ป้าย | ความหมาย |
-|------|----------|
-| **[ข้อเท็จจริง]** | ข้อความที่ปรากฏในเอกสารสถาปัตยกรรมโดยตรง พร้อมเลขอ้างอิง |
-| **[ข้อวิเคราะห์]** | การประมวลข้อเท็จจริงหลายแหล่งเข้าเป็นข้อกำหนดเชิงกำกับดูแล |
-| **[ช่องว่าง]** | ประเด็นที่เอกสารสถาปัตยกรรมยังขัดกันเองหรือยังไม่กำหนด ต้องมีมติก่อนบังคับใช้ |
-
-คำ **MUST / MUST NOT / SHOULD / MAY** ใช้ตามความหมายเชิงข้อกำหนด: ต้อง / ห้าม / ควร / อาจ
+**การจำแนกข้อความและกฎการอ้างอิงของบทนี้:** ใช้ตาม[ภาคผนวก ค](15-appendix.md) ซึ่งรวมกฎการอ้างอิง ป้ายจำแนกข้อความ และความหมายของ MUST / MUST NOT / SHOULD / MAY
 
 ---
 
@@ -57,19 +48,19 @@ description: "14. ความมั่นคงปลอดภัย: Threat Mo
 
 | รหัส | Abuse case | ผลกระทบ | มาตรการที่ตรวจสอบได้ |
 |------|-----------|---------|---------------------|
-| W2 | Wallet binary ถูกแก้ให้ข้ามการตรวจลายมือชื่อ TL | ยอมรับ TL ปลอม | pin TL public key ใน binary, code signing, runtime integrity check และถ้า pubkey ไม่ตรงให้ app block ตัวเอง |
-| W4 | Wallet ใช้ soft key ที่ export ได้ | กุญแจ holder ถูกขโมยไปสร้าง wallet ปลอม | Issuer ปฏิเสธกุญแจที่ไม่มี `key_storage_verified` และตรวจ WSCD attestation chain; หากจะใช้ข้อกำหนดฮาร์ดแวร์จาก Trusted List ต้องกำหนดฟิลด์และกฎใน Thai profile ก่อน [research/42](../research/42-trusted-list-lote-jwt-format.md) |
-| W5 | TL rollback หรือ downgrade | ใช้ TL เก่าที่องค์กรหรือบริการถูกเพิกถอนแล้วยังปรากฏว่า active | ตรวจ `LoTE.ListAndSchemeInformation.LoTESequenceNumber` ไม่ให้ย้อนกลับ และตรวจ `NextUpdate` ก่อนใช้ cache [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| W2 | Wallet binary ถูกแก้ให้ข้ามการตรวจลายมือชื่อ TL | ยอมรับ TL ปลอม | pin ใบรับรองผู้ลงนามหรือลายนิ้วมือของใบรับรองใน header `x5c` ไว้ใน binary, code signing, runtime integrity check และถ้าใบรับรองไม่ตรงให้ app block ตัวเอง |
+| W4 | Wallet ใช้ soft key ที่ export ได้ | กุญแจ holder ถูกขโมยไปสร้าง wallet ปลอม | Issuer ปฏิเสธกุญแจที่ไม่มีหลักฐานการเก็บกุญแจในฮาร์ดแวร์หรือ secure enclave และตรวจ WSCD attestation chain; ชื่อช่องและระดับที่รับยังต้องกำหนดใน Thai profile (§12.2) [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| W5 | TL rollback หรือ downgrade | ใช้ TL เก่าที่องค์กรหรือบริการถูกเพิกถอนแล้วยังปรากฏว่า active | ตรวจ `LoTE.ListAndSchemeInformation.LoTESequenceNumber` ไม่ให้ย้อนกลับ และไม่ใช้ snapshot ที่เก่าเกิน maximum staleness ตามข้อ 12.8 [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | W6 | Holder ส่ง VC และ key handle ให้ผู้อื่น | ใช้ VC ของบุคคลอื่น | ผูก `cnf` กับกุญแจใน WSCD ที่ส่งต่อไม่ได้, ตรวจ PoP ใน VP และ biometric gate ก่อนปล่อยกุญแจ |
 | W7 | Cache poisoning บนเครื่องที่ root | ใช้ TL ที่ถูกแก้ในเครื่อง | re-sign cached TL ด้วยกุญแจจาก WSCD ก่อนเก็บ, encrypted storage และตรวจ HMAC ทุกครั้งที่ load |
 | I3 | กุญแจ Issuer เก่าถูกขโมยแต่ยังถูก trust | ปลอม VC ด้วยกุญแจเก่า | Thai profile ต้องกำหนดสถานะและช่วงเวลาต่อกุญแจ; หากตรวจไม่ได้ให้ปฏิเสธ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | I6 | Status List endpoint ถูก takeover | ส่งค่า active ให้ VC ที่ถูกเพิกถอน | Status List ต้องเป็น signed JWS; หากจะอ้าง URI จาก Trusted List ต้องกำหนดตำแหน่ง URI และกฎการผูกกับ Issuer ใน Thai profile ก่อน ห้ามเชื่อ URI จาก `status` claim เพียงลำพัง และต้องตรวจลายมือชื่อด้วยกุญแจที่อนุญาต [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | I7 | DID Document ถูกแก้ให้เปลี่ยน controller key | หลอกให้ trust กุญแจของผู้โจมตี | TL เป็นแหล่งข้อมูลอ้างอิงหลักของกุญแจ, monitor การเปลี่ยนกุญแจใน DID Document และเผยแพร่ TL ใหม่ภายใน 24 ชั่วโมง |
-| I8 | Replay Issuer ที่ถูกเพิกถอนแล้ว | Wallet ที่ cache เก่ายังยอมรับ VC | Verifier ตรวจ Status List รายใบและสถานะ Issuer ใน Trusted List ที่ยังไม่เกิน `LoTE.ListAndSchemeInformation.NextUpdate` [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| I8 | Replay Issuer ที่ถูกเพิกถอนแล้ว | Wallet ที่ cache เก่ายังยอมรับ VC | Verifier ตรวจ Status List รายใบและสถานะ Issuer ใน Trusted List ที่มีอายุไม่เกิน maximum staleness ตามข้อ 12.8 [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | V7 | ใช้ Verifier Attestation ที่หมดอายุจาก cache | Verifier ที่หมดสิทธิ์ยังขอข้อมูลได้ | เพดาน TTL ที่ override ไม่ได้, ห้าม cache attestation และตรวจ `iat` กับ `exp` โดย clock skew ไม่เกิน 60 วินาที |
-| V8 | Verifier ถูก compromise หลัง onboard | รายการ Verifier ยังมีผลใช้ได้ | สพธอ. ต้องเผยแพร่การเปลี่ยนสถานะ Verifier เป็น `suspended` หรือ `withdrawn` ตามฟิลด์ที่ Thai profile กำหนด; Wallet ดึงไฟล์ Verifier Trusted List ฉบับเต็มเมื่อเกิดการตรวจสอบ และตรวจสถานะก่อนนำเสนอ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| V8 | Verifier ถูก compromise หลัง onboard | รายการ Verifier ยังมีผลใช้ได้ | สพธอ. ต้องเผยแพร่การถอนบริการ Verifier ออกจาก Trusted List; Wallet ดึงไฟล์ Verifier Trusted List ฉบับเต็มเมื่อเกิดการตรวจสอบ และตรวจสถานะก่อนนำเสนอ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | T1 | HSM ที่ลงลายมือชื่อ TL ถูก breach | ลงลายมือชื่อ TL ปลอมได้ | กุญแจอยู่ใน HSM ที่ export ไม่ได้, quorum M-of-N แบบ 3-of-5, emergency key แบบ air-gapped และ HSM กระจายตามภูมิศาสตร์ |
-| T4 | Rollback หรือ freeze attack ด้วย TL เก่าที่ลายมือชื่อถูกต้อง | ไม่เห็นการเพิกถอนล่าสุด | ตรวจ `LoTESequenceNumber`, `ListIssueDateTime` และ `NextUpdate` ใน `LoTE.ListAndSchemeInformation` พร้อมตรวจ clock skew [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| T4 | Rollback หรือ freeze attack ด้วย TL เก่าที่ลายมือชื่อถูกต้อง | ไม่เห็นการเพิกถอนล่าสุด | ตรวจ `LoTESequenceNumber` และ `ListIssueDateTime` ใน `LoTE.ListAndSchemeInformation` พร้อมตรวจ clock skew [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | T5 | เนื้อหา JWT ที่เผยแพร่กับข้อมูลต้นทางไม่ตรงกัน | consumer ตัดสิน trust จากข้อมูลผิด | ตรวจความสอดคล้องของ payload แบบ LoTE ใน JWT ทั้งสามรายการกับข้อมูลต้นทางก่อนลงลายมือชื่อ และใช้ CI gate ปฏิเสธเมื่อพบความคลาดเคลื่อน [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | T6 | ผู้ดูแล TL ภายในกระทำโดยทุจริต | แก้รายการหรือขอบเขตสิทธิ์ | Transparency Log แบบ append-only, 2-person rule ที่แยกหน้าที่ admin ไม่เท่ากับ approver และไม่เท่ากับ signer, public diff feed และบันทึก privileged session |
 
@@ -90,14 +81,14 @@ description: "14. ความมั่นคงปลอดภัย: Threat Mo
 | SC-01 | App attestation ทำงานจริง | W1 | ผล Play Integrity หรือ App Attest ตอน enrollment | enrollment จาก app ที่ไม่ผ่าน attestation ถูกปฏิเสธ |
 | SC-02 | การตรวจลายมือชื่อ TL แก้ไม่ได้ | W2 | code review และ binary ที่ pin pubkey | TL ที่ลายมือชื่อผิดถูกปฏิเสธทุกกรณี |
 | SC-03 | บังคับขอบเขตสิทธิ์ตาม Thai profile โดยข้ามไม่ได้ | W3, V3 | negative conformance test เมื่อ Thai profile กำหนดฟิลด์ขอบเขตสิทธิ์แล้ว | VC หรือคำขอที่อยู่นอก scope ถูกปฏิเสธ และผู้ใช้ override ไม่ได้ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
-| SC-04 | กุญแจใน WSCD export ไม่ได้ | W4 | WSCD attestation chain | กุญแจที่ไม่มี `key_storage_verified` ถูกปฏิเสธ |
-| SC-05 | บังคับ `LoTESequenceNumber` ไม่ย้อนกลับ | W5, T4 | fixture JWT ที่ `LoTESequenceNumber` ย้อนหลังหรือ `NextUpdate` หมดอายุ | JWT ที่ย้อนหลังหรือหมดอายุถูกปฏิเสธ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| SC-04 | กุญแจใน WSCD export ไม่ได้ | W4 | WSCD attestation chain | กุญแจที่ไม่มีหลักฐานการเก็บกุญแจในฮาร์ดแวร์หรือ secure enclave ถูกปฏิเสธ |
+| SC-05 | บังคับ `LoTESequenceNumber` ไม่ย้อนกลับ | W5, T4 | fixture JWT ที่ `LoTESequenceNumber` ย้อนหลัง | JWT ที่ย้อนหลังถูกปฏิเสธ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 | SC-06 | ตรวจ `cnf` key binding | W6, V9 | fixture ที่ `cnf` ไม่ตรง | VP ที่ `cnf` ไม่ตรงถูกปฏิเสธ |
 | SC-07 | Cache integrity ของ TL | W7 | ผลตรวจ HMAC และการทดสอบแก้ cache บนเครื่อง root | cache ที่ถูกแก้ถูกตรวจจับและไม่ถูกใช้ |
 | SC-08 | ป้องกัน overlay และ phishing UI | W8, V6 | ผลทดสอบ anti-overlay | prompt สำหรับยืนยันสำคัญมาจาก WSCD และ UI แสดงชื่อจาก TL เท่านั้น |
 | SC-09 | บังคับ `client_id_scheme` อย่างเข้มงวด | V1, V4 | fixture ที่ SAN ไม่ตรงและ `response_uri` นอก SAN | ถูกปฏิเสธทั้งสองกรณี |
 | SC-10 | ไม่ cache Verifier Attestation | V7 | code review และ fixture ที่หมดอายุ | revalidate ทุกครั้งที่นำเสนอ และ clock skew ที่ยอมรับไม่เกิน 60 วินาที |
-| SC-11 | ตรวจสถานะ Verifier ใน Trusted List | V8 | fixture JWT แบบ LoTE ที่มีสถานะ `suspended` และ `withdrawn` ตามฟิลด์ที่ Thai profile กำหนด | ปฏิเสธ **ก่อน** แสดงหน้าขอความยินยอม; หากไม่มีฟิลด์สถานะที่ตรวจสอบได้ ให้ปฏิเสธ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
+| SC-11 | ตรวจว่าบริการ Verifier ยังอยู่ใน Trusted List | V8 | fixture JWT แบบ LoTE ที่ไม่มีบริการ Verifier | ปฏิเสธ **ก่อน** แสดงหน้าข้อความยินยอม; หากไม่พบบริการ ให้ปฏิเสธ [research/42](../research/42-trusted-list-lote-jwt-format.md) |
 
 ### 14.3.2 Issuer
 
@@ -110,7 +101,7 @@ description: "14. ความมั่นคงปลอดภัย: Threat Mo
 | SC-16 | SLA อัปเดต Status List | A-ARCH §8 I8 | เอกสาร SLA และ log การอัปเดต | ไม่เกิน 15 นาที และวัดจาก log ได้ |
 | SC-17 | Status List JWT ครบองค์ประกอบ | A-ARCH §8 I9 | ตรวจ token | ลงลายมือชื่อด้วยกุญแจผู้ออก และมีทั้ง `exp` กับ `ttl` โดย `ttl` ≤ `exp` |
 | SC-18 | Rotation endpoint ตรวจ PoP ด้วยกุญแจเดิม | A-KD08 §7 | fixture PoP ที่ลงลายมือชื่อด้วยกุญแจผิด | คำขอที่ PoP ไม่ถูกต้องถูกปฏิเสธ |
-| SC-19 | mark VC เดิมเป็น `rotated` | A-KD08 §3, §8 | log การหมุนเวียนและสถานะใน list | VC เดิมเปลี่ยนสถานะสำเร็จก่อน Wallet ลบ key handle |
+| SC-19 | ยกเลิก VC เดิมเมื่อมีนโยบายให้เลิกยอมรับ | A-KD08 §3, §8 | log การหมุนเวียนและสถานะใน list | VC ที่ถูกยกเลิกเป็น `INVALID`; การหมุนเวียนตามกำหนดไม่เปลี่ยนสถานะ VC เดิมเอง |
 | SC-20 | ตรวจ WSCD attestation ก่อนออก VC | W4, A-KD06 | ผลตรวจ attestation chain | กุญแจที่เป็น software หรือมาจากเครื่อง root ถูกปฏิเสธ |
 
 ### 14.3.3 Verifier
@@ -149,7 +140,7 @@ description: "14. ความมั่นคงปลอดภัย: Threat Mo
 
 | รหัส | ประเด็น | นัยสำคัญ | ผู้ตัดสิน | อ้างอิงที่ขัดกัน |
 |------|--------|---------|----------|-----------------|
-| G-02 | เอกสารต้นทางบางแห่งประกาศ `bits: 1` แต่กำหนด status `SUSPENDED` (`0x02`) และ Thai-profile `rotated` (`0x03`) ซึ่งแทนด้วย 1 บิตไม่ได้ | interoperability — issuer ต้องใช้ `bits: 2` ขึ้นไปสำหรับ status เหล่านี้; `rotated` เป็นค่าเฉพาะ Thai profile ไม่ใช่ status ที่ IETF ลงทะเบียนหรือข้อกำหนดที่ยืนยันได้จาก CIR โดยตรง | ETDA Security Team | [A-ARCH §ลำดับที่ 3] กับ [A-KD08 §8, §9]; TSL draft-21 §§4.1, 7.1, 14.5.2 |
+| G-02 | เอกสารต้นทางบางแห่งประกาศ `bits: 1` แต่กำหนด `SUSPENDED` (`0x02`) ซึ่งแทนด้วย 1 บิตไม่ได้ | interoperability: issuer ต้องใช้ `bits: 2` เมื่อใช้ `SUSPENDED`; Thai profile ปฏิเสธค่า application-specific ที่ไม่รองรับ | ETDA Security Team | [A-ARCH §ลำดับที่ 3] กับ [A-KD08 §8, §9]; TSL draft-21 §§4.1, 7.1, 14.5.2 |
 | G-03 | `ttl` 12 ชั่วโมงขัดกับ SLA อัปเดต 15 นาทีและเป้าหมายเพิกถอนฉุกเฉิน 1 ชั่วโมง | ความมั่นคงปลอดภัย เพราะ Verifier อาจไม่เห็นการเพิกถอนได้นานถึง 12 ชั่วโมง | ETDA Security Team | [A-ARCH §ลำดับที่ 3] กับ [A-ARCH §8 I8] และ [A-TM §I3] |
 | G-06 | เอกสารสถาปัตยกรรมกำหนด algorithm profile แบบ mandatory และ optional ไว้เฉพาะกุญแจ Wallet Level 1–3 ยังไม่มี profile ที่บังคับสำหรับกุญแจลงลายมือชื่อ VC ของ Issuer และกุญแจ TL ของ ETDA มีเพียงค่าที่ปรากฏในตัวอย่าง | ต้องมี profile ที่บังคับได้ก่อนใช้เป็นเกณฑ์ตรวจประเมิน | ETDA Security Team | [A-KD01 §9] เทียบกับ [A-ARCH §ลำดับที่ 3] |
 | G-01 | HSM ของ Issuer กำหนด FIPS 140-2 Level 3 ขณะที่ HSM ของ ETDA กำหนด FIPS 140-3 Level 3 ขึ้นไป | **มีมติแล้ว (ดู §12.2):** เกณฑ์ขั้นต่ำคือ FIPS 140-2 Level 3 [N1] และยอมรับ FIPS 140-3 Level 3 [N2] เป็นมาตรฐานสืบทอด เนื่องจาก NIST เปลี่ยนใบรับรอง FIPS 140-2 เป็น Historical วันที่ 21 กันยายน 2569 [N3] | ETDA Security Team | [A-ARCH §8 I1] กับ [A-TM §T1] |

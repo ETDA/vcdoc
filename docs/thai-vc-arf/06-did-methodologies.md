@@ -1,5 +1,6 @@
 ---
-description: "6. Decentralized Identifiers Methodologies — Thai VC ARF 2.0 DRAFT 0"
+description: "6. Decentralized Identifiers Methodologies — Thai VC ARF 2.0 DRAFT 1"
+sidebar_position: 6
 ---
 
 # 6. Decentralized Identifiers Methodologies
@@ -60,18 +61,18 @@ description: "6. Decentralized Identifiers Methodologies — Thai VC ARF 2.0 DRA
 
 ระบบของประเทศไทยใช้ DID Method หลัก 3 รูปแบบ แต่ละรูปแบบมีวิธี resolve ต่างกัน ดังนี้
 
-| DID Method | ผู้ใช้ | วิธี Resolve | ต้อง Resolver กลาง? |
+| DID Method | ผู้ใช้ | วิธี Resolve | ต้องติดต่อภายนอก? |
 |------------|--------|-------------|:-------------------:|
 | `did:web` | หน่วยงาน (Issuer, Verifier, Wallet Provider) | HTTPS GET ไปที่ `/.well-known/did.json` ของโดเมนต์นั้น | ไม่ |
 | `did:jwk` | ผู้ถือเอกสาร (Holder) | กุญแจสาธารณะฝังอยู่ในสายอักขระ DID โดยตรง ไม่ต้องดึงจากที่อื่น | ไม่ |
-| `did:ndid` | ระบบตัวตนของไทย (เช่น NDID) | ส่งคำขอไปยัง ETDA Trust Gateway ซึ่งทำหน้าที่เป็น Universal Resolver | ใช่ |
+| `did:ndid` | ระบบตัวตนของไทย (เช่น NDID) | ติดต่อ NDID โดยตรง ผ่าน resolver ของ NDID | ใช่ (NDID) |
 
 ```mermaid
 flowchart LR
     USER["ผู้ตรวจสอบ/กระเป๋า"] --> CHECK{"DID Method?"}
     CHECK -->|did:web| HTTPS["HTTPS GET<br/>.well-known/did.json"]
     CHECK -->|did:jwk| SELF["แยกกุญแจจากสายอักขระ<br/>(self-contained)"]
-    CHECK -->|did:ndid หรือ custom| UR["ETDA Trust Gateway<br/>(Universal Resolver)"]
+    CHECK -->|did:ndid หรือ proprietary method| UR["resolver ของผู้ให้บริการ<br/>ของ method นั้น"]
     HTTPS --> DOC["DID Document"]
     SELF --> KEY["กุญแจสาธารณะ"]
     UR --> DOC
@@ -80,9 +81,8 @@ flowchart LR
     style UR fill:#E3F2FD,stroke:#1565C0
 ```
 
-{/* TODO: อัปเดตแผนภาพและรายละเอียดการ resolve ของ did:ndid เมื่อมีการกำหนด spec ของ did:ndid method อย่างเป็นทางการ */}
 
-DID Document ที่ได้จากการ resolve จะมีกุญแจสาธารณะที่ใช้ตรวจลายมือชื่อของเอนทิตีนั้น ทั้งนี้ การ resolve ผ่าน DIF Universal Resolver ยังคงเป็นกลไกสำหรับ custom DID method ที่ยังไม่ได้จดทะเบียนใน W3C DID method registry
+DID Document ที่ได้จากการ resolve จะมีกุญแจสาธารณะที่ใช้ตรวจลายมือชื่อของเอนทิตีนั้น DID method สาธารณะที่ยังไม่จดทะเบียนใน W3C DID method registry สามารถ resolve ได้ผ่าน resolver ของ method นั้นหรือผ่าน resolver ของ สพธอ. ส่วน proprietary method ต้องติดต่อผู้ให้บริการของ method นั้น ในกรณี `did:ndid` ผู้ให้บริการคือ NDID
 
 {/* pdf page 47 */}
 
@@ -102,9 +102,9 @@ DID Document ที่ได้จากการ resolve จะมีกุญ�
 
 **รูปที่ 25 ข้อมูลที่ผ่านการ resolve**
 
-![การตั้งค่า Registry สำหรับ DIF Universal Resolver](images/p48-1.png)
+![การตั้งค่า Registry ของ DID method](images/p48-1.png)
 
-**รูปที่ 26 การตั้งค่า Registry สำหรับ DIF Universal Resolver**
+**รูปที่ 26 การตั้งค่า Registry ของ DID method**
 
 {/* pdf page 49 */}
 
